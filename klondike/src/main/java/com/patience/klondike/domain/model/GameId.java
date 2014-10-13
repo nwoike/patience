@@ -1,13 +1,15 @@
 package com.patience.klondike.domain.model;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.google.common.base.Strings;
 
 public final class GameId {
 
 	private final String id;
 	
 	public GameId(String id) {
-		checkNotNull(id, "Id must be provided.");
+		checkArgument(!Strings.isNullOrEmpty(id), "Id must be provided.");
 		this.id = id;
 	}
 	

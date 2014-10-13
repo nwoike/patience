@@ -43,6 +43,10 @@ public class Game {
 		}
 	}
 	
+	public void drawCard() {
+		
+	}
+	
 	public GameId gameId() {
 		return gameId;
 	}

@@ -19,7 +19,7 @@ public class GameIdTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidId() {
-		new GameId("123");
+		new GameId("");
 	}
 
 }
