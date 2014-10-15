@@ -6,17 +6,11 @@ public class StockRepresentation {
 
 	private int cardCount;
 	
-	private int passes;
-	
 	public StockRepresentation(Stock stock) {
-		
+		this.cardCount = stock.cardCount();
 	}
 	
 	public int getCardCount() {
 		return cardCount;
-	}
-	
-	public int getPasses() {
-		return passes;
 	}
 }

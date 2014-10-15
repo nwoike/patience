@@ -5,9 +5,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
-public final class CardStack {
+import com.google.common.collect.Iterators;
+
+public final class CardStack implements Iterable<PlayingCard> {
 
 	private List<PlayingCard> cards = newArrayList();
 	
@@ -80,6 +83,10 @@ public final class CardStack {
 		
 		copy.removeAll(other.cards());
 		
+		if (copy.isEmpty()) {
+			return emptyStack();
+		}
+		
 		return new CardStack(copy);
 	}
 	
@@ -110,6 +117,10 @@ public final class CardStack {
 		return newArrayList(cards);
 	}
 	
+	public int cardCount() {
+		return cards.size();
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -127,5 +138,9 @@ public final class CardStack {
 	@Override
 	public int hashCode() {
 		return 991 * cards.hashCode();
+	}
+
+	public Iterator<PlayingCard> iterator() {
+		return Iterators.unmodifiableIterator(cards.iterator());
 	}
 }

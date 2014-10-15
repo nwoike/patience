@@ -41,8 +41,12 @@ public final class Deck {
 		return cards.size();
 	}
 	
-	public List<PlayingCard> cards() {
+	protected List<PlayingCard> cards() {
 		return newArrayList(cards);
+	}
+	
+	public boolean isEmpty() {
+		return cards.isEmpty();
 	}
 	
 	@Override

@@ -28,5 +28,4 @@ public class InMemoryGameRepository implements GameRepository {
 	public GameId nextIdentity() {
 		return new GameId(String.valueOf(counter.getAndIncrement()));
 	}
-
 }

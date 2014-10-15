@@ -1,6 +1,14 @@
 package com.patience.klondike.application.representation;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+
+import java.util.Collection;
+import java.util.Map;
+
+import com.patience.klondike.domain.model.Foundation;
 import com.patience.klondike.domain.model.Game;
+import com.patience.klondike.domain.model.TableauPile;
 
 public class GameRepresentation {
 
@@ -10,16 +18,22 @@ public class GameRepresentation {
 	
 	private WasteRepresentation waste;
 	
-	private FoundationsRepresentation foundations;
+	private Collection<FoundationRepresentation> foundations = newArrayList();
 	
-	private TableauRepresentation tableau;
+	private Map<String, TableauPileRepresentation> tableau = newHashMap();
 	
 	public GameRepresentation(Game game) {
 		this.gameId = game.gameId().id();
 		this.stock = new StockRepresentation(game.stock());
 		this.waste = new WasteRepresentation(game.waste());
-		this.foundations = new FoundationsRepresentation(game.foundations());
-		this.tableau = new TableauRepresentation(game.tableauPiles());
+		
+		for (TableauPile tableauPile : game.tableauPiles()) {
+			this.tableau.put(String.valueOf(tableauPile.tableauPileId()), new TableauPileRepresentation(tableauPile));
+		} 
+		
+		for (Foundation foundation : game.foundations()) {
+			this.foundations.add(new FoundationRepresentation(foundation));
+		}	
 	}
 	
 	public String getGameId() {
@@ -34,11 +48,11 @@ public class GameRepresentation {
 		return waste;
 	}
 	
-	public FoundationsRepresentation getFoundations() {
+	public Collection<FoundationRepresentation> getFoundations() {
 		return foundations;
 	}
 	
-	public TableauRepresentation getTableau() {
+	public Map<String, TableauPileRepresentation> getTableau() {
 		return tableau;
 	}
 }
