@@ -1,8 +1,14 @@
 package com.patience.klondike.application;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.List;
+
+import com.patience.common.domain.model.CardStack;
+import com.patience.common.domain.model.PlayingCard;
 import com.patience.klondike.application.representation.GameRepresentation;
+import com.patience.klondike.application.representation.PlayingCardRepresentation;
 import com.patience.klondike.domain.model.Game;
 import com.patience.klondike.domain.model.GameId;
 import com.patience.klondike.domain.model.GameRepository;
@@ -34,7 +40,6 @@ public class GameApplicationService {
 		return gameId.toString();
 	}
 	
-	
 	public void drawCard(String gameId) {
 		Game game = gameRepository.gameOfId(new GameId(gameId));
 		
@@ -43,5 +48,51 @@ public class GameApplicationService {
 		}
 		
 		game.drawCard();
+	}
+	
+	public void moveCards(String gameId, List<PlayingCardRepresentation> cards, int tableauPileId) {
+		Game game = gameRepository.gameOfId(new GameId(gameId));
+		
+		if (game == null) {
+			throw new IllegalArgumentException("Game could not be found.");
+		}
+
+		game.moveCards(toCardStack(cards), tableauPileId);
+		
+		gameRepository.save(game);
+	}
+
+	public void flipCard(String gameId, int tableauPileId) {
+		Game game = gameRepository.gameOfId(new GameId(gameId));
+		
+		if (game == null) {
+			throw new IllegalArgumentException("Game could not be found.");
+		}
+		
+		game.flipCard(tableauPileId);
+		
+		gameRepository.save(game);
+	}
+	
+	public void promoteCard(String gameId, PlayingCardRepresentation request) {
+		Game game = gameRepository.gameOfId(new GameId(gameId));
+		
+		if (game == null) {
+			throw new IllegalArgumentException("Game could not be found.");
+		}
+		
+		game.promoteCard(request.toPlayingCard());
+		
+		gameRepository.save(game);
+	}
+		
+	private CardStack toCardStack(List<PlayingCardRepresentation> cards) {
+		List<PlayingCard> playingCards = newArrayList();
+		
+		for (PlayingCardRepresentation card : cards) {
+			playingCards.add(card.toPlayingCard());
+		}		
+		
+		return new CardStack(playingCards);
 	}
 }

@@ -88,4 +88,8 @@ public enum PlayingCard {
 	public String toString() {
 		return rank + " of " + suit;
 	}
+
+	public static PlayingCard of(Rank rank, Suit suit) {		
+		return valueOf(rank.name() + "Of" + suit.name());
+	}
 }

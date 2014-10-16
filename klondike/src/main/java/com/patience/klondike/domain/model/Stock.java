@@ -16,12 +16,17 @@ public class Stock {
 		this.cards.addAll(cards);
 	}
 	
-	public PlayingCard drawCard() {
+	public PlayingCard drawCard() throws StockEmptyException {
 		if (cards.isEmpty()) {
-			throw new IllegalStateException("Stock is currently empty.");
+			throw new StockEmptyException();
 		}
 		
 		return cards.remove(cards.size() - 1);
+	}
+	
+	public void restock(List<PlayingCard> cards) {
+		checkNotNull(cards, "Provided restock cards must be provided.");
+		this.cards.addAll(cards);
 	}
 	
 	public int cardCount() {

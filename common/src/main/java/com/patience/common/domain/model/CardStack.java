@@ -106,7 +106,7 @@ public final class CardStack implements Iterable<PlayingCard> {
 	 * The card in a pile which doesn't have any cards on top of it.
 	 */
 	public PlayingCard topCard() {
-		return cards.get(cards.size() - 1);		
+		return cards.isEmpty() ? null : cards.get(cards.size() - 1);		
 	}
 	
 	public PlayingCard bottomCard() {

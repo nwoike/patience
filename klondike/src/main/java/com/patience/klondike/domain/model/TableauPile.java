@@ -31,7 +31,7 @@ public class TableauPile {
 	public void addCards(CardStack cards) {
 		checkNotNull(cards, "Cards must be provided.");
 		
-		if (!isAssignable(cards.topCard())) {
+		if (!isAssignable(cards.bottomCard())) {
 			throw new IllegalArgumentException("Provided cards are not currently assignable to this TableauPile.");
 		}
 

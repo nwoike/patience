@@ -17,7 +17,9 @@ public class InMemoryGameRepository implements GameRepository {
 	
 	@Override
 	public void save(Game game) {
-		this.savedGames.put(game.gameId(), game);
+		if (!savedGames.containsKey(game.gameId())) {
+			this.savedGames.put(game.gameId(), game);
+		}
 	}
 
 	public Game gameOfId(GameId gameId) {

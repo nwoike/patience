@@ -75,8 +75,75 @@ public class Game {
 		}
 	}
 	
-	public void drawCard() {
+	public void drawCard() {		
+		try {
+			PlayingCard card = stock.drawCard();
+			waste.addCard(card);
+			
+		} catch (StockEmptyException e) {
+			this.stock.restock(waste.cards());
+			waste.clear();
+		}		
+	}
+
+	public void moveCards(CardStack stack, int destinationTableauPileId) {
+		TableauPile destination = locateTableauPile(destinationTableauPileId);
 		
+		if (stack.cardCount() == 1 && waste.topCard() == stack.topCard()) {
+			waste.removeTopCard();
+			destination.addCards(stack);
+			return;
+			
+		} else {
+			for (TableauPile origin : tableauPiles) {
+				if (origin.flippedCards().contains(stack)) {				
+					origin.removeCards(stack);
+					destination.addCards(stack);
+					return;
+				}				
+			}
+		}
+		
+		throw new IllegalArgumentException("Cards were not able to be moved to destination.");
+	}
+	
+	public void flipCard(int tableauPileId) {
+		TableauPile tableauPile = locateTableauPile(tableauPileId);
+		tableauPile.flipTopCard();
+	}	
+	
+	public void promoteCard(PlayingCard playingCard) {
+		boolean found = false;
+		
+		if (waste.topCard() == playingCard) {
+			waste.removeTopCard();
+			found = true;
+			
+		} else {
+			for (TableauPile tableauPile : tableauPiles) {
+				if (tableauPile.flippedCards().topCard() == playingCard) {
+					tableauPile.removeCards(new CardStack(playingCard));
+					found = true;
+					break;
+				}
+			}
+		}
+		
+		if (!found) {
+			throw new IllegalArgumentException("Card was not able to be promoted.");
+		}
+		
+		foundations.get(playingCard.suit()).addCard(playingCard);
+	}
+	
+	private TableauPile locateTableauPile(int tableauPileId) {
+		TableauPile tableauPile = tableauPiles.get(tableauPileId - 1);
+				
+		if (tableauPile == null) {
+			throw new IllegalArgumentException("Invalid tableau pile destination.");
+		}
+		
+		return tableauPile;
 	}
 	
 	public GameId gameId() {
