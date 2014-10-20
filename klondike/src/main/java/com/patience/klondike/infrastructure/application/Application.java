@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import com.patience.klondike.infrastructure.servlet.filter.SimpleCORSFilter;
+import com.patience.servlet.filter.SimpleCORSFilter;
 
 @Configuration
 @EnableAutoConfiguration

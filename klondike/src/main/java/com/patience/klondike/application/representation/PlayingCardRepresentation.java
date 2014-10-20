@@ -2,9 +2,9 @@ package com.patience.klondike.application.representation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.patience.common.domain.model.PlayingCard;
-import com.patience.common.domain.model.Rank;
-import com.patience.common.domain.model.Suit;
+import com.patience.common.domain.model.card.PlayingCard;
+import com.patience.common.domain.model.card.Rank;
+import com.patience.common.domain.model.card.Suit;
 
 public class PlayingCardRepresentation {
 

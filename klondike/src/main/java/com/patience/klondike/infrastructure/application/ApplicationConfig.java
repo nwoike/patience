@@ -4,8 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.patience.klondike.application.GameApplicationService;
-import com.patience.klondike.domain.model.GameRepository;
-import com.patience.klondike.infrastructure.persistence.InMemoryGameRepository;
+import com.patience.klondike.domain.model.game.GameRepository;
+import com.patience.klondike.domain.model.game.SimpleWinnableChecker;
+import com.patience.klondike.infrastructure.persistence.JdbcGameRepository;
 import com.patience.klondike.resource.GameResource;
 
 @Configuration
@@ -13,13 +14,12 @@ public class ApplicationConfig {
 
 	@Bean
 	public GameRepository gameRepository() {
-		//return new JdbcGameRepository();
-		return new InMemoryGameRepository();
+		return new JdbcGameRepository();
 	}
 	
 	@Bean
 	public GameApplicationService gameApplicationService() {
-		return new GameApplicationService(gameRepository());
+		return new GameApplicationService(gameRepository(), new SimpleWinnableChecker());
 	}
 	
 	@Bean

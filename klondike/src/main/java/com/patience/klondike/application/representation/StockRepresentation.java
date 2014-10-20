@@ -1,6 +1,6 @@
 package com.patience.klondike.application.representation;
 
-import com.patience.klondike.domain.model.Stock;
+import com.patience.klondike.domain.model.game.Stock;
 
 public class StockRepresentation {
 

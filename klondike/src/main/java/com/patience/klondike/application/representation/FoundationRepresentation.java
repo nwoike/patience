@@ -4,18 +4,18 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
-import com.patience.common.domain.model.PlayingCard;
-import com.patience.klondike.domain.model.Foundation;
+import com.patience.common.domain.model.card.PlayingCard;
+import com.patience.klondike.domain.model.game.Foundation;
 
 
 public class FoundationRepresentation {
-
+	
 	private String suit;
 	
 	private List<String> ranks = newArrayList();
 	
 	public FoundationRepresentation(Foundation foundation) {		
-		this.suit = foundation.suit().name();
+		this.suit = foundation.suit() != null ? foundation.suit().name() : null;
 		
 		List<PlayingCard> cards = foundation.cards();
 		
@@ -23,7 +23,7 @@ public class FoundationRepresentation {
 			this.ranks.add(playingCard.rank().name());
 		}		
 	}
-	
+
 	public String getSuit() {
 		return suit;
 	}

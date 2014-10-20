@@ -6,23 +6,24 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.patience.klondike.domain.model.game.SimpleWinnableChecker;
 import com.patience.klondike.infrastructure.persistence.InMemoryGameRepository;
 
 public class GameApplicationServiceTest {
 
-	private GameApplicationService service;
+	private GameApplicationService gameApplicationService;
 	
 	private InMemoryGameRepository gameRepository;
 	
 	@Before
 	public void setup() {
 		gameRepository = new InMemoryGameRepository();
-		service = new GameApplicationService(gameRepository);		
+		gameApplicationService = new GameApplicationService(gameRepository, new SimpleWinnableChecker());		
 	}
 	
 	@Test
 	public void createGame() {
-		String newGameId = service.startGame();
+		String newGameId = gameApplicationService.startGame();
 		assertThat(newGameId, equalTo("1"));
 	}
 

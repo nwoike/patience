@@ -1,0 +1,12 @@
+spring:
+    application.name: klondike
+    datasource:
+        driverClassName: org.hsqldb.jdbc.JDBCDriver
+        url: jdbc:hsqldb:mem:patience
+        user: sa
+
+logging:
+    level.: INFO
+
+server:
+    port: ${port:8081}

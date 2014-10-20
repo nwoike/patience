@@ -34,11 +34,12 @@ public class GameResourceTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private InMemoryGameRepository stubGameRepository;
+	private InMemoryGameRepository gameRepository;
 	
 	@Before
 	public void setup() {
 		this.mockMvc = webAppContextSetup(this.wac).build();
+		this.gameRepository.reset();
 	}
 
 	@Test

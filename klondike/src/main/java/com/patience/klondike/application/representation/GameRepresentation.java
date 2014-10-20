@@ -1,14 +1,13 @@
 package com.patience.klondike.application.representation;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
-import java.util.Collection;
 import java.util.Map;
 
-import com.patience.klondike.domain.model.Foundation;
-import com.patience.klondike.domain.model.Game;
-import com.patience.klondike.domain.model.TableauPile;
+import com.patience.klondike.domain.model.game.Foundation;
+import com.patience.klondike.domain.model.game.Game;
+import com.patience.klondike.domain.model.game.TableauPile;
+import com.patience.klondike.domain.model.game.WinnableChecker;
 
 public class GameRepresentation {
 
@@ -18,21 +17,24 @@ public class GameRepresentation {
 	
 	private WasteRepresentation waste;
 	
-	private Collection<FoundationRepresentation> foundations = newArrayList();
+	private Map<String, FoundationRepresentation> foundations = newHashMap();
 	
 	private Map<String, TableauPileRepresentation> tableau = newHashMap();
 	
-	public GameRepresentation(Game game) {
+	private boolean won;
+	
+	public GameRepresentation(Game game, WinnableChecker checker) {
 		this.gameId = game.gameId().id();
 		this.stock = new StockRepresentation(game.stock());
 		this.waste = new WasteRepresentation(game.waste());
+		this.won = game.isWinner(checker);
 		
 		for (TableauPile tableauPile : game.tableauPiles()) {
 			this.tableau.put(String.valueOf(tableauPile.tableauPileId()), new TableauPileRepresentation(tableauPile));
 		} 
 		
 		for (Foundation foundation : game.foundations()) {
-			this.foundations.add(new FoundationRepresentation(foundation));
+			this.foundations.put(String.valueOf(foundation.foundationId()), new FoundationRepresentation(foundation));
 		}	
 	}
 	
@@ -48,11 +50,15 @@ public class GameRepresentation {
 		return waste;
 	}
 	
-	public Collection<FoundationRepresentation> getFoundations() {
+	public Map<String, FoundationRepresentation> getFoundations() {
 		return foundations;
 	}
 	
 	public Map<String, TableauPileRepresentation> getTableau() {
 		return tableau;
+	}
+	
+	public boolean isWon() {
+		return won;
 	}
 }

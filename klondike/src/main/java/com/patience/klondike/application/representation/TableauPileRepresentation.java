@@ -4,8 +4,8 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
-import com.patience.common.domain.model.PlayingCard;
-import com.patience.klondike.domain.model.TableauPile;
+import com.patience.common.domain.model.card.PlayingCard;
+import com.patience.klondike.domain.model.game.TableauPile;
 
 public class TableauPileRepresentation {
 
