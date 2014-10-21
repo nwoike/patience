@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.patience.klondike.domain.model.game.SimpleWinnableChecker;
+import com.patience.klondike.domain.service.game.SimpleWinChecker;
 import com.patience.klondike.infrastructure.persistence.InMemoryGameRepository;
 
 public class GameApplicationServiceTest {
@@ -18,7 +18,7 @@ public class GameApplicationServiceTest {
 	@Before
 	public void setup() {
 		gameRepository = new InMemoryGameRepository();
-		gameApplicationService = new GameApplicationService(gameRepository, new SimpleWinnableChecker());		
+		gameApplicationService = new GameApplicationService(gameRepository, new SimpleWinChecker());		
 	}
 	
 	@Test

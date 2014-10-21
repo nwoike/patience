@@ -15,7 +15,7 @@ public class WasteDO {
 	}
 	
 	public WasteDO(Waste waste) {
-		for (PlayingCard card : waste.playingCards()) {
+		for (PlayingCard card : waste.cards()) {
 			this.cards.add(new PlayingCardDO(card));
 		}		
 	}

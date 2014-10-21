@@ -18,7 +18,7 @@ import com.patience.common.domain.model.cardstack.SequentialRank;
 import com.patience.common.specification.CardStackingStyle;
 import com.patience.klondike.application.IllegalMoveException;
 
-public class Foundation {
+public final class Foundation {
 	
 	private int foundationId;
 	
@@ -83,6 +83,21 @@ public class Foundation {
 	
 	public List<PlayingCard> cards() {		
 		return cardStack.cards();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && this.getClass() == obj.getClass()) {
+			Foundation other = (Foundation) obj;
+			return foundationId == other.foundationId();
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {		
+		return 6133 * foundationId;
 	}
 	
 	private void setFoundationId(int foundationId) {

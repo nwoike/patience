@@ -1,5 +1,6 @@
 package com.patience.klondike.infrastructure.persistence;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
 
 import java.io.IOException;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -25,10 +25,8 @@ import com.patience.klondike.infrastructure.persistence.model.GameDO;
  */
 public class JdbcGameRepository implements GameRepository {
 
-	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
-	@Autowired
 	private ObjectMapper objectMapper;
 	
 	// TODO: Externalize SQL somewhere on the classpath
@@ -39,7 +37,12 @@ public class JdbcGameRepository implements GameRepository {
 	private static final String insertSql = "INSERT INTO KLONDIKE VALUES (:gameId, :data, 1)";
 	
 	private static final String updateSql = "UPDATE KLONDIKE SET data = :data, version= :newVersion"
-	                                      + " WHERE game_id = :gameId AND version = :existingVersion ";
+	                                      + " WHERE game_id = :gameId AND version = :existingVersion";
+	
+	public JdbcGameRepository(NamedParameterJdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
+		this.jdbcTemplate = checkNotNull(jdbcTemplate, "JDBCTemplate must be provided");
+		this.objectMapper = checkNotNull(objectMapper, "ObjectMapper must be provided");	
+	}
 	
 	@Override
 	public GameId nextIdentity() {		

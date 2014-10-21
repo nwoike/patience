@@ -7,7 +7,7 @@ import java.util.Map;
 import com.patience.klondike.domain.model.game.Foundation;
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.TableauPile;
-import com.patience.klondike.domain.model.game.WinnableChecker;
+import com.patience.klondike.domain.service.game.WinChecker;
 
 public class GameRepresentation {
 
@@ -23,11 +23,11 @@ public class GameRepresentation {
 	
 	private boolean won;
 	
-	public GameRepresentation(Game game, WinnableChecker checker) {
+	public GameRepresentation(Game game, WinChecker checker) {
 		this.gameId = game.gameId().id();
 		this.stock = new StockRepresentation(game.stock());
 		this.waste = new WasteRepresentation(game.waste());
-		this.won = game.isWinner(checker);
+		this.won = game.isWinnable(checker);
 		
 		for (TableauPile tableauPile : game.tableauPiles()) {
 			this.tableau.put(String.valueOf(tableauPile.tableauPileId()), new TableauPileRepresentation(tableauPile));

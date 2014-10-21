@@ -52,7 +52,7 @@ public class Waste {
 		return stack.isEmpty();
 	}
 	
-	public List<PlayingCard> playingCards() {
+	public List<PlayingCard> cards() {
 		return stack.cards();
 	}
 	

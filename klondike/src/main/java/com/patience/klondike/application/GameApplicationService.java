@@ -14,18 +14,27 @@ import com.patience.klondike.application.representation.PlayingCardRepresentatio
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.GameId;
 import com.patience.klondike.domain.model.game.GameRepository;
-import com.patience.klondike.domain.model.game.WinnableChecker;
+import com.patience.klondike.domain.service.game.WinChecker;
 
 @Transactional
 public class GameApplicationService {
 
 	private GameRepository gameRepository;
 	
-	private WinnableChecker winnableChecker;
+	private WinChecker winnableChecker;
 	
-	public GameApplicationService(GameRepository gameRepository, WinnableChecker winnableChecker) {
+	public GameApplicationService(GameRepository gameRepository, WinChecker winnableChecker) {
 		this.gameRepository = checkNotNull(gameRepository, "Game Repository must be provided.");
 		this.winnableChecker = checkNotNull(winnableChecker, "Winnable checker must be provided.");		
+	}
+	
+	public String startGame() {
+		GameId gameId = gameRepository.nextIdentity();
+		
+		Game game = new Game(gameId);
+		gameRepository.save(game);
+		
+		return gameId.toString();
 	}
 	
 	@Transactional(readOnly=true)		
@@ -37,15 +46,6 @@ public class GameApplicationService {
 		}
 		
 		return new GameRepresentation(game, winnableChecker);
-	}
-	
-	public String startGame() {
-		GameId gameId = gameRepository.nextIdentity();
-		
-		Game game = new Game(gameId);
-		gameRepository.save(game);
-		
-		return gameId.toString();
 	}
 	
 	public void drawCard(String gameId) {

@@ -3,6 +3,8 @@ package com.patience.klondike.domain.model.game;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public final class GameId {
 
 	private final String id;
@@ -12,6 +14,7 @@ public final class GameId {
 		this.id = id.replaceAll("[^A-Za-z0-9]", "");;
 	}
 	
+	@JsonProperty
 	public String id() {
 		return id.toString();
 	}

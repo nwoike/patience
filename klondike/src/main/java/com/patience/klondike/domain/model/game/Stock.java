@@ -3,6 +3,7 @@ package com.patience.klondike.domain.model.game;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.patience.common.domain.model.card.CardStack;
@@ -21,9 +22,9 @@ public class Stock {
 		this.cardStack = new CardStack(cards, stackingStyle);
 	}
 	
-	public PlayingCard drawCard() throws EmptyStockException {
+	public PlayingCard drawCard() {
 		if (cardStack.isEmpty()) {
-			throw new EmptyStockException();
+			return null;
 		}
 		
 		PlayingCard topCard = cardStack.topCard();
@@ -32,11 +33,16 @@ public class Stock {
 		return topCard;
 	}
 	
-	public void restock(List<PlayingCard> cards) {
-		checkNotNull(cards, "Cards must be provided.");
-		this.cardStack = new CardStack(cards);
+	public void recycle(Waste waste) {
+		checkNotNull(waste, "Waste must be provided.");
+		
+		List<PlayingCard> wasted = waste.cards();
+		Collections.reverse(wasted);
+		waste.clear();
+		
+		this.cardStack = new CardStack(wasted);
 	}
-	
+
 	public List<PlayingCard> playingCards() {
 		return newArrayList(cardStack);
 	}

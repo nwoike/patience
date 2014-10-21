@@ -12,7 +12,7 @@ public class WasteRepresentation {
 	private List<PlayingCardRepresentation> cards = newArrayList();
 
 	public WasteRepresentation(Waste waste) {
-		for (PlayingCard card : waste.playingCards()) {
+		for (PlayingCard card : waste.cards()) {
 			cards.add(new PlayingCardRepresentation(card));
 		}		
 	}

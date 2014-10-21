@@ -5,11 +5,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.patience.servlet.filter.DomainEventPublisherResetFilter;
 import com.patience.servlet.filter.SimpleCORSFilter;
 
 @Configuration
 @EnableAutoConfiguration
+@EnableScheduling
 @Import(ApplicationConfig.class)
 public class Application {
 	
@@ -22,4 +25,8 @@ public class Application {
 		return new SimpleCORSFilter();
 	}
 	
+	@Bean
+	public DomainEventPublisherResetFilter domainEventPublisherResetFilter() {
+		return new DomainEventPublisherResetFilter();
+	}
 }

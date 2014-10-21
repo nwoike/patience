@@ -1,6 +1,9 @@
-package com.patience.klondike.domain.model.game;
+package com.patience.klondike.domain.service.game;
 
-public class SimpleWinnableChecker implements WinnableChecker {
+import com.patience.klondike.domain.model.game.Game;
+import com.patience.klondike.domain.model.game.TableauPile;
+
+public class SimpleWinChecker implements WinChecker {
 
 	@Override
 	public boolean isWinnable(Game game) {

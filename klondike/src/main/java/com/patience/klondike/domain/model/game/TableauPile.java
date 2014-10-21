@@ -17,7 +17,7 @@ import com.patience.common.domain.model.cardstack.SequentialRank;
 import com.patience.common.specification.CardStackingStyle;
 import com.patience.klondike.application.IllegalMoveException;
 
-public class TableauPile {
+public final class TableauPile {
 
 	private int tableauPileId;
 
@@ -53,6 +53,10 @@ public class TableauPile {
 		this.flippedCards = flippedCards.withCardsRemoved(cards);
 	}
 
+	public void removeCard(PlayingCard card) {
+		removeCards(new CardStack(card));
+	}
+	
 	public void flipTopCard() {
 		if (unflippedCards.isEmpty()) {
 			throw new IllegalMoveException("No unflipped cards were found in Tableau Pile.");
@@ -129,6 +133,21 @@ public class TableauPile {
 
 	public int unflippedCardCount() {
 		return unflippedCards.cardCount();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && this.getClass() == obj.getClass()) {
+			TableauPile other = (TableauPile) obj;
+			return tableauPileId == other.tableauPileId();
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return 6007 * tableauPileId;
 	}
 	
 	private void setTableauPileId(int tableauPileId) {
