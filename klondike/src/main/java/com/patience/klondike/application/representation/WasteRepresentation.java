@@ -9,7 +9,7 @@ import com.patience.klondike.domain.model.game.Waste;
 
 public class WasteRepresentation {
 
-	private List<PlayingCardRepresentation> cards = newArrayList();
+	private final List<PlayingCardRepresentation> cards = newArrayList();
 
 	public WasteRepresentation(Waste waste) {
 		for (PlayingCard card : waste.cards()) {

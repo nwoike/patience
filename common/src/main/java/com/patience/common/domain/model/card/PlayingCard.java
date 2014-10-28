@@ -1,5 +1,9 @@
 package com.patience.common.domain.model.card;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonFormat(shape= JsonFormat.Shape.OBJECT)
 public enum PlayingCard {
 
 	TwoOfClubs(Rank.Two, Suit.Clubs),
@@ -76,10 +80,12 @@ public enum PlayingCard {
 		this.suit = suit;
 	}
 	
+	@JsonProperty
 	public Rank rank() {
 		return rank;
 	}
 	
+	@JsonProperty
 	public Suit suit() {
 		return suit;
 	}

@@ -9,9 +9,9 @@ import java.util.List;
 import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.cardstack.AnyOrder;
-import com.patience.common.specification.CardStackingStyle;
+import com.patience.common.domain.model.cardstack.style.CardStackingStyle;
 
-public class Stock {
+public final class Stock {
 
 	private CardStack cardStack;
 	

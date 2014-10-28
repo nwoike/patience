@@ -21,7 +21,8 @@ public class GameWon implements DomainEvent {
 	}
 	
 	@JsonCreator
-	public GameWon(@JsonProperty("gameId") GameId gameId, @JsonProperty("occurredOn") DateTime occurredOn,
+	public GameWon(@JsonProperty("gameId") GameId gameId, 
+			@JsonProperty("occurredOn") DateTime occurredOn,
 			@JsonProperty("eventVersion") int eventVersion) {
 		this.gameId = gameId;
 		this.occurredOn = occurredOn;

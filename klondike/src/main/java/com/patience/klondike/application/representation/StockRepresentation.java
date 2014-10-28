@@ -4,7 +4,7 @@ import com.patience.klondike.domain.model.game.Stock;
 
 public class StockRepresentation {
 
-	private int cardCount;
+	private final int cardCount;
 	
 	public StockRepresentation(Stock stock) {
 		this.cardCount = stock.cardCount();

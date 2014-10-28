@@ -10,9 +10,9 @@ import com.patience.klondike.domain.model.game.Foundation;
 
 public class FoundationRepresentation {
 	
-	private String suit;
+	private final String suit;
 	
-	private List<String> ranks = newArrayList();
+	private final List<String> ranks = newArrayList();
 	
 	public FoundationRepresentation(Foundation foundation) {		
 		this.suit = foundation.suit() != null ? foundation.suit().name() : null;

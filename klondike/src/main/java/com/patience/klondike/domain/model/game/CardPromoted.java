@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.domain.model.event.DomainEvent;
-import com.patience.klondike.domain.model.game.scorer.PileType;
+import com.patience.klondike.domain.model.game.score.PileType;
 
 public class CardPromoted implements DomainEvent {
 
@@ -28,8 +28,10 @@ public class CardPromoted implements DomainEvent {
 	}
 	
 	@JsonCreator
-	public CardPromoted(@JsonProperty("gameId") GameId gameId, @JsonProperty("card") PlayingCard card,
-			@JsonProperty("origin") PileType origin, @JsonProperty("occurredOn") DateTime occurredOn) {
+	public CardPromoted(@JsonProperty("gameId") GameId gameId, 
+			@JsonProperty("card") PlayingCard card,
+			@JsonProperty("origin") PileType origin, 
+			@JsonProperty("occurredOn") DateTime occurredOn) {
 		this.gameId = gameId;
 		this.card = card;
 		this.origin = origin;
@@ -60,7 +62,7 @@ public class CardPromoted implements DomainEvent {
 	@Override
 	@JsonProperty
 	public String eventType() {		
-		return "patience.klondike.CardsPromoted";
+		return "patience.klondike.CardPromoted";
 	}
 
 	@Override

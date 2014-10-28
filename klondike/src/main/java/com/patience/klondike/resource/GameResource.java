@@ -15,8 +15,10 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.patience.klondike.application.GameApplicationService;
+import com.patience.klondike.application.GameScoreApplicationService;
 import com.patience.klondike.application.IllegalMoveException;
 import com.patience.klondike.application.representation.GameRepresentation;
+import com.patience.klondike.application.representation.GameScoreRepresentation;
 import com.patience.klondike.application.representation.PlayingCardRepresentation;
 import com.patience.klondike.resource.request.FlipCard;
 import com.patience.klondike.resource.request.MoveCards;
@@ -28,8 +30,11 @@ public class GameResource {
 
 	private GameApplicationService service;
 	
-	public GameResource(GameApplicationService service) {
-		this.service = checkNotNull(service, "Game Application Service must be provided.");
+	private GameScoreApplicationService scoreService;
+	
+	public GameResource(GameApplicationService service, GameScoreApplicationService scoreService) {
+		this.service = checkNotNull(service, "GameApplicationService must be provided.");
+		this.scoreService = checkNotNull(scoreService, "GameScoreApplicationService must be provided.");
 	}
 	
 	@ExceptionHandler(IllegalMoveException.class)	
@@ -60,8 +65,16 @@ public class GameResource {
 		} else {
 			return new ResponseEntity<GameRepresentation>(gameRepresentation, HttpStatus.OK);
 		}
-	}
+	}		
+	
+	@RequestMapping(value="/{gameId}/score", method = RequestMethod.GET)
+	public ResponseEntity<GameScoreRepresentation> retrieveGameScore(@PathVariable String gameId) {
+		long score = scoreService.retrieveGameScore(gameId);
 		
+		GameScoreRepresentation scoreRepresentation = new GameScoreRepresentation(score);
+		
+		return new ResponseEntity<GameScoreRepresentation>(scoreRepresentation, HttpStatus.OK);		
+	}	
 	
 	@RequestMapping(value="/{gameId}/draw", method = RequestMethod.POST)
 	public ResponseEntity<GameRepresentation> drawCard(@PathVariable String gameId) {

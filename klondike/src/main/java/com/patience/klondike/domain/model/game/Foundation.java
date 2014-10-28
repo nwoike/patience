@@ -15,10 +15,11 @@ import com.patience.common.domain.model.cardstack.EmptyStack;
 import com.patience.common.domain.model.cardstack.IncreasingRank;
 import com.patience.common.domain.model.cardstack.MatchingSuit;
 import com.patience.common.domain.model.cardstack.SequentialRank;
-import com.patience.common.specification.CardStackingStyle;
+import com.patience.common.domain.model.cardstack.style.CardStackingStyle;
 import com.patience.klondike.application.IllegalMoveException;
+import com.patience.klondike.domain.model.game.score.PileType;
 
-public final class Foundation {
+public final class Foundation implements Pile {
 	
 	private int foundationId;
 	
@@ -47,13 +48,24 @@ public final class Foundation {
 		this.cardStack = cardStack.withAdditionalCard(playingCard);	
 	}
 	
-	public void removeTopCard() {
+	@Override
+	public void removeCards(List<PlayingCard> cards) {
+		if (cards.size() > 1) {
+			throw new IllegalMoveException("Can only remove a single card from a foundation at a time.");
+		}
+		
+		removeTopCard();
+	}
+	
+	public PlayingCard removeTopCard() {
 		if (cardStack.isEmpty()) {
 			throw new IllegalMoveException("Foundation is already empty.");
 		}
 		
 		PlayingCard topCard = cardStack.topCard();
 		this.cardStack = this.cardStack.withCardRemoved(topCard);
+		
+		return topCard;
 	}
 	
 	public int foundationId() {
@@ -72,9 +84,8 @@ public final class Foundation {
 		return cardStack.topCard();
 	}
 	
-	public boolean topCardMatches(PlayingCard other) {
-		checkNotNull(other, "Playing card must be provided.");
-		return other.equals(topCard());
+	public boolean topCardsMatch(List<PlayingCard> cards) {
+		return cardStack.endsWith(cards);
 	}
 	
 	public boolean isEmpty() {
@@ -83,6 +94,11 @@ public final class Foundation {
 	
 	public List<PlayingCard> cards() {		
 		return cardStack.cards();
+	}
+	
+	@Override
+	public PileType pileType() {
+		return PileType.Foundation;
 	}
 	
 	@Override

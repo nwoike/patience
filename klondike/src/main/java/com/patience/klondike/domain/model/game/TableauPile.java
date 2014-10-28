@@ -11,13 +11,15 @@ import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.card.Rank;
 import com.patience.common.domain.model.cardstack.AlternatingSuitColor;
 import com.patience.common.domain.model.cardstack.AnyOrder;
+import com.patience.common.domain.model.cardstack.BottomRank;
 import com.patience.common.domain.model.cardstack.DecreasingRank;
 import com.patience.common.domain.model.cardstack.EmptyStack;
 import com.patience.common.domain.model.cardstack.SequentialRank;
-import com.patience.common.specification.CardStackingStyle;
+import com.patience.common.domain.model.cardstack.style.CardStackingStyle;
 import com.patience.klondike.application.IllegalMoveException;
+import com.patience.klondike.domain.model.game.score.PileType;
 
-public final class TableauPile {
+public final class TableauPile implements Pile {
 
 	private int tableauPileId;
 
@@ -25,36 +27,46 @@ public final class TableauPile {
 
 	private CardStack flippedCards;
 	
-	private static CardStackingStyle unflippedStackingStyle = 
-			new AnyOrder();
+	private static final CardStackingStyle unflippedStackingStyle = 
+			new EmptyStack()
+				.or(new AnyOrder());
 	
-	private static CardStackingStyle flippedStackingStyle =
+	private static final CardStackingStyle flippedStackingStyle =
 			new EmptyStack()
 				.or(new AlternatingSuitColor()
 					 .and(new DecreasingRank())
 					 .and(new SequentialRank()));
 	
+	private static final CardStackingStyle laneStackingStyle =
+			flippedStackingStyle
+				.and(new BottomRank(Rank.King));
+	
 	public TableauPile(int tableauPileId, List<PlayingCard> unflippedCards, List<PlayingCard> flippedCards) {
 		this.setTableauPileId(tableauPileId);
-		this.setUnflippedCards(unflippedCards);		
+		this.setUnflippedCards(unflippedCards);
 		this.setFlippedCards(flippedCards);
-		//this.checkAssignability(flippedCards());
 	}
 
-	public void addCards(CardStack cards) {
+	public void addCards(List<PlayingCard> cards) {
+		checkNotNull(cards, "Cards must be provided.");		
+		CardStack newFlippedCards = flippedCards.withAdditionalCards(cards);		
+		this.flippedCards = new CardStack(newFlippedCards, determineFlippedStackingStyle());
+	}
+
+	public void removeCards(List<PlayingCard> cards) {
 		checkNotNull(cards, "Cards must be provided.");
+		this.flippedCards = new CardStack(flippedCards.withCardsRemoved(cards), determineFlippedStackingStyle());
+	}
+
+	public void removeTopCard(PlayingCard card) {
+		removeCards(newArrayList(card));
+	}
+	
+	public PlayingCard removeTopCard() {
+		PlayingCard topCard = flippedCards.topCard();
+		removeCards(newArrayList(topCard));
 		
-		this.checkAssignability(cards);
-		this.flippedCards = flippedCards.withAdditionalCards(cards);
-	}
-
-	public void removeCards(CardStack cards) {
-		checkNotNull(cards, "Cards must be provided.");
-		this.flippedCards = flippedCards.withCardsRemoved(cards);
-	}
-
-	public void removeCard(PlayingCard card) {
-		removeCards(new CardStack(card));
+		return topCard;
 	}
 	
 	public void flipTopCard() {
@@ -74,41 +86,6 @@ public final class TableauPile {
 	public boolean isLane() {
 		return unflippedCards.isEmpty() && flippedCards.isEmpty();
 	}
-	
-	private void checkAssignability(CardStack cardStack) {
-		if (!isAssignable(cardStack)) {
-			throw new IllegalMoveException("Provided cards are not assignable to this TableauPile.");
-		}
-	}
-	
-	private boolean isAssignable(CardStack cardStack) {
-		checkNotNull(cardStack, "CardStack must be provided.");
-
-		if (isLane() && Rank.King != cardStack.bottomCard().rank()) {
-			return false;
-		}
-
-		if (isFull()) {
-			return false;
-		}
-		
-		return true;
-	}
-
-	public boolean contains(CardStack stack) {
-		return flippedCards.contains(stack);
-	}
-	
-	/**
-	 * Is the last flipped card in the Pile an Ace?
-	 */
-	private boolean isFull() {
-		if (isLane()) {
-			return false;
-		}
-
-		return flippedCards.topCard().rank() == Rank.Ace;
-	}
 
 	public int tableauPileId() {
 		return tableauPileId;
@@ -122,9 +99,8 @@ public final class TableauPile {
 		return flippedCards;
 	}
 
-	public boolean topCardMatches(PlayingCard other) {
-		checkNotNull(other, "Playing card must be provided.");
-		return other.equals(flippedCards.topCard());
+	public boolean topCardsMatch(List<PlayingCard> cards) {
+		return flippedCards.endsWith(cards);
 	}
 	
 	public int totalCardCount() {
@@ -133,6 +109,11 @@ public final class TableauPile {
 
 	public int unflippedCardCount() {
 		return unflippedCards.cardCount();
+	}
+	
+	@Override
+	public PileType pileType() {
+		return PileType.Tableau;
 	}
 	
 	@Override
@@ -158,12 +139,16 @@ public final class TableauPile {
 	}
 	
 	private void setFlippedCards(List<PlayingCard> flippedCards) {
-		checkNotNull(flippedCards, "Flipped cards must be provided.");		
-		this.flippedCards = new CardStack(flippedCards, flippedStackingStyle);	
+		checkNotNull(flippedCards, "Flipped card list must be provided but may be empty.");
+		this.flippedCards = new CardStack(flippedCards, flippedStackingStyle);
+	}
+	
+	private void setUnflippedCards(List<PlayingCard> unflippedCards) {
+		checkNotNull(unflippedCards, "Unflipped card list must be provided but may be empty.");
+		this.unflippedCards = new CardStack(unflippedCards, unflippedStackingStyle);
 	}
 
-	private void setUnflippedCards(List<PlayingCard> unflippedCards) {
-		checkNotNull(unflippedCards, "Unflipped cards must be provided.");
-		this.unflippedCards = new CardStack(unflippedCards, unflippedStackingStyle);	
+	private CardStackingStyle determineFlippedStackingStyle() {
+		return isLane() ? laneStackingStyle : flippedStackingStyle;
 	}
 }

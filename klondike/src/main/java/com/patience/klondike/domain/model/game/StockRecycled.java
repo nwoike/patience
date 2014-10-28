@@ -20,7 +20,8 @@ public class StockRecycled implements DomainEvent {
 	}
 	
 	@JsonCreator
-	public StockRecycled(@JsonProperty("gameId") GameId gameId, @JsonProperty("occurredOn") DateTime occurredOn) {
+	public StockRecycled(@JsonProperty("gameId") GameId gameId, 
+			@JsonProperty("occurredOn") DateTime occurredOn) {
 		this.gameId = gameId;
 		this.occurredOn = occurredOn;
 	}

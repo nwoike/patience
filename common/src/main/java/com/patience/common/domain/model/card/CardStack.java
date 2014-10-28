@@ -12,8 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.collect.Iterators;
-import com.patience.common.specification.CardStackingStyle;
-import com.patience.common.specification.StackingStyleTracker;
+import com.patience.common.domain.model.cardstack.style.CardStackingStyle;
+import com.patience.common.domain.model.cardstack.style.StackingStyleTracker;
 
 public final class CardStack implements Iterable<PlayingCard> {
 
@@ -27,6 +27,14 @@ public final class CardStack implements Iterable<PlayingCard> {
 	public CardStack(CardStackingStyle stackingStyle) {
 		checkNotNull(stackingStyle, "CardStackingStyle must be provided.");
 		this.stackingStyle = stackingStyle;		
+	}
+	
+	public CardStack(CardStack cardStack, CardStackingStyle stackingStyle) {
+		checkNotNull(stackingStyle, "CardStackingStyle must be provided.");
+		this.stackingStyle = stackingStyle;	
+		List<PlayingCard> cards = cardStack.cards();
+		validateCards(cards);
+		this.cards.addAll(cards);
 	}
 	
 	public CardStack(PlayingCard... card) {		
@@ -94,9 +102,17 @@ public final class CardStack implements Iterable<PlayingCard> {
 	}
 	
 	public boolean contains(CardStack cardStack) {		
-		return cards.containsAll(cardStack.cards());
+		return contains(cardStack.cards());
+	}
+	
+	public boolean contains(List<PlayingCard> cards) {
+		return cards.containsAll(cards);
 	}
 
+	public boolean endsWith(List<PlayingCard> cards) {
+		return endsWith(new CardStack(cards));		
+	}
+	
 	public boolean endsWith(CardStack other) {
 		checkNotNull(other, "CardStack must be provided.");
 		

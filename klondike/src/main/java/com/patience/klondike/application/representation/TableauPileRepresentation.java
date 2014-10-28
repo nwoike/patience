@@ -9,9 +9,9 @@ import com.patience.klondike.domain.model.game.TableauPile;
 
 public class TableauPileRepresentation {
 
-	private int cardCount;
+	private final int cardCount;
 
-	private List<PlayingCardRepresentation> flipped = newArrayList();
+	private final List<PlayingCardRepresentation> flipped = newArrayList();
 	
 	public TableauPileRepresentation(TableauPile tableauPile) {
 		this.cardCount = tableauPile.totalCardCount();

@@ -15,7 +15,7 @@ public class RankTest {
 
 	@Test
 	public void precedes() {
-		assertTrue(Rank.Three.preceds(Rank.Four));
+		assertTrue(Rank.Three.precedes(Rank.Four));
 	}
 
 }

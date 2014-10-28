@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.patience.klondike.TestConfig;
-import com.patience.klondike.infrastructure.application.Application;
+import com.patience.klondike.application.config.Application;
 import com.patience.klondike.infrastructure.persistence.InMemoryGameRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)

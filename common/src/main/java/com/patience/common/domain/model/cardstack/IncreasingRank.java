@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
-import com.patience.common.specification.AbstractCardStackingStyle;
+import com.patience.common.domain.model.cardstack.style.AbstractCardStackingStyle;
 
 public class IncreasingRank extends AbstractCardStackingStyle {
 

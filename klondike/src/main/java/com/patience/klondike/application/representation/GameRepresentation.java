@@ -7,27 +7,26 @@ import java.util.Map;
 import com.patience.klondike.domain.model.game.Foundation;
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.TableauPile;
-import com.patience.klondike.domain.service.game.WinChecker;
 
 public class GameRepresentation {
 
-	private String gameId;
+	private final String gameId;
 	
-	private StockRepresentation stock;
+	private final StockRepresentation stock;
 	
-	private WasteRepresentation waste;
+	private final WasteRepresentation waste;
 	
-	private Map<String, FoundationRepresentation> foundations = newHashMap();
+	private final Map<String, FoundationRepresentation> foundations = newHashMap();
 	
-	private Map<String, TableauPileRepresentation> tableau = newHashMap();
+	private final Map<String, TableauPileRepresentation> tableau = newHashMap();
 	
-	private boolean won;
+	private final boolean won;
 	
-	public GameRepresentation(Game game, WinChecker checker) {
+	public GameRepresentation(Game game, boolean won) {
 		this.gameId = game.gameId().id();
 		this.stock = new StockRepresentation(game.stock());
 		this.waste = new WasteRepresentation(game.waste());
-		this.won = game.isWinnable(checker);
+		this.won = won;
 		
 		for (TableauPile tableauPile : game.tableauPiles()) {
 			this.tableau.put(String.valueOf(tableauPile.tableauPileId()), new TableauPileRepresentation(tableauPile));

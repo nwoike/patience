@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.klondike.application.representation.GameRepresentation;
 import com.patience.klondike.application.representation.PlayingCardRepresentation;
@@ -20,12 +19,12 @@ import com.patience.klondike.domain.service.game.WinChecker;
 public class GameApplicationService {
 
 	private GameRepository gameRepository;
-	
-	private WinChecker winnableChecker;
+
+	private WinChecker winChecker;
 	
 	public GameApplicationService(GameRepository gameRepository, WinChecker winnableChecker) {
 		this.gameRepository = checkNotNull(gameRepository, "Game Repository must be provided.");
-		this.winnableChecker = checkNotNull(winnableChecker, "Winnable checker must be provided.");		
+		this.winChecker = checkNotNull(winnableChecker, "Winnable checker must be provided.");		
 	}
 	
 	public String startGame() {
@@ -45,64 +44,59 @@ public class GameApplicationService {
 			return null;
 		}
 		
-		return new GameRepresentation(game, winnableChecker);
+		final boolean won = winChecker.isWinnable(game);
+		
+		return new GameRepresentation(game, won);
 	}
 	
 	public void drawCard(String gameId) {
-		Game game = gameRepository.gameOfId(new GameId(gameId));
-		
-		if (game == null) {
-			throw new IllegalArgumentException("Game could not be found.");
-		}
-		
+		Game game = gameOf(gameId);		
 		game.drawCard();
 		
 		gameRepository.save(game);
 	}
 	
 	public void moveCards(String gameId, List<PlayingCardRepresentation> cards, int tableauPileId) {
-		Game game = gameRepository.gameOfId(new GameId(gameId));
-		
-		if (game == null) {
-			throw new IllegalArgumentException("Game could not be found.");
-		}
-
-		game.moveCards(toCardStack(cards), tableauPileId);
+		Game game = gameOf(gameId);
+		game.moveCards(toPlayingCardList(cards), tableauPileId);
 		
 		gameRepository.save(game);
 	}
 
 	public void flipCard(String gameId, int tableauPileId) {
-		Game game = gameRepository.gameOfId(new GameId(gameId));
-		
-		if (game == null) {
-			throw new IllegalArgumentException("Game could not be found.");
-		}
-		
+		Game game = gameOf(gameId);		
 		game.flipCard(tableauPileId);
 		
 		gameRepository.save(game);
 	}
 	
-	public void promoteCard(String gameId, PlayingCardRepresentation request, int foundationId) {
+	public void promoteCard(String gameId, PlayingCardRepresentation card, int foundationId) {
+		Game game = gameOf(gameId);		
+		game.promoteCard(toPlayingCard(card), foundationId);
+		
+		gameRepository.save(game);
+	}
+
+	private Game gameOf(String gameId) {
 		Game game = gameRepository.gameOfId(new GameId(gameId));
 		
 		if (game == null) {
 			throw new IllegalArgumentException("Game could not be found.");
 		}
-		
-		game.promoteCard(request.toPlayingCard(), foundationId);
-		
-		gameRepository.save(game);
+		return game;
 	}
+	
+	private PlayingCard toPlayingCard(PlayingCardRepresentation representation) {
+		return representation.toPlayingCard();
+	}
+	
+	private List<PlayingCard> toPlayingCardList(List<PlayingCardRepresentation> representations) {
+		List<PlayingCard> cards = newArrayList();
 		
-	private CardStack toCardStack(List<PlayingCardRepresentation> cards) {
-		List<PlayingCard> playingCards = newArrayList();
-		
-		for (PlayingCardRepresentation card : cards) {
-			playingCards.add(card.toPlayingCard());
+		for (PlayingCardRepresentation representation : representations) {
+			cards.add(representation.toPlayingCard());
 		}		
 		
-		return new CardStack(playingCards);
+		return cards;
 	}
 }

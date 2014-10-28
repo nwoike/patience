@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.patience.domain.model.event.EventStore;
 import com.patience.klondike.TestConfig;
-import com.patience.klondike.infrastructure.application.Application;
+import com.patience.klondike.application.config.Application;
 import com.patience.klondike.infrastructure.persistence.InMemoryGameRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -16,7 +16,7 @@ public enum Rank {
 	Queen,
 	King;
 
-	public boolean preceds(Rank other) {
+	public boolean precedes(Rank other) {
 		return other.ordinal() - ordinal() == 1;
 	}
 

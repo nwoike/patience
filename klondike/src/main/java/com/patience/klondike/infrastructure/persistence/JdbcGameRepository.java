@@ -3,22 +3,20 @@ package com.patience.klondike.infrastructure.persistence;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.GameId;
 import com.patience.klondike.domain.model.game.GameRepository;
-import com.patience.klondike.infrastructure.persistence.model.GameDO;
+import com.patience.klondike.infrastructure.persistence.model.game.GameDO;
 
 /**
  * Simple example of persisting an aggregate as a serialized graph.
@@ -27,21 +25,23 @@ public class JdbcGameRepository implements GameRepository {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
-	private ObjectMapper objectMapper;
+	private ObjectSerializer objectSerializer;
 	
-	// TODO: Externalize SQL somewhere on the classpath
-	private static final String searchSql = "SELECT COUNT(*) FROM Klondike WHERE game_id = :gameId";
+	@Value("${sql.game.exists}")
+	private String searchSql;
 	
-	private static final String selectSql = "SELECT game_id, data, version FROM Klondike WHERE game_id = :gameId";
+	@Value("${sql.game.retrieve}")
+	private String selectSql;
 	
-	private static final String insertSql = "INSERT INTO KLONDIKE VALUES (:gameId, :data, 1)";
+	@Value("${sql.game.insert}")
+	private String insertSql;
 	
-	private static final String updateSql = "UPDATE KLONDIKE SET data = :data, version= :newVersion"
-	                                      + " WHERE game_id = :gameId AND version = :existingVersion";
+	@Value("${sql.game.update}")
+	private String updateSql;
 	
-	public JdbcGameRepository(NamedParameterJdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
-		this.jdbcTemplate = checkNotNull(jdbcTemplate, "JDBCTemplate must be provided");
-		this.objectMapper = checkNotNull(objectMapper, "ObjectMapper must be provided");	
+	public JdbcGameRepository(NamedParameterJdbcTemplate jdbcTemplate, ObjectSerializer objectSerializer) {
+		this.jdbcTemplate = checkNotNull(jdbcTemplate, "JdbcTemplate must be provided.");
+		this.objectSerializer = checkNotNull(objectSerializer, "ObjectSerializer must be provided.");	
 	}
 	
 	@Override
@@ -51,16 +51,10 @@ public class JdbcGameRepository implements GameRepository {
 
 	@Override
 	public void save(Game game) {		
-		Map<String, String> parameters = buildParameterMap(game);
-		
-		int count = jdbcTemplate.queryForObject(searchSql, parameters, Integer.class);
-					
-		if (count == 0) {			
-			jdbcTemplate.update(insertSql, parameters);		
-			 
-		} else {			
-			jdbcTemplate.update(updateSql, parameters);		
-		}
+		Map<String, String> parameters = buildParameterMap(game);		
+		int count = jdbcTemplate.queryForObject(searchSql, parameters, Integer.class);		
+		String sql = count == 0 ? insertSql	: updateSql;		
+		jdbcTemplate.update(sql, parameters);	
 	}
 
 	private Map<String, String> buildParameterMap(Game game) {
@@ -74,18 +68,8 @@ public class JdbcGameRepository implements GameRepository {
 	}
 
 	private String convertToJson(Game game) {
-		GameDO gameDO = new GameDO(game);
-		
-		String jsonData;
-		
-		try {
-			jsonData = objectMapper.writeValueAsString(gameDO);		
-			
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
-	
-		return jsonData;
+		GameDO gameDO = new GameDO(game);		
+		return objectSerializer.serialize(gameDO);		
 	}
 
 	@Override
@@ -96,14 +80,8 @@ public class JdbcGameRepository implements GameRepository {
 		 List<Game> results = jdbcTemplate.query(selectSql, parameters, new RowMapper<Game>() {
 			@Override
 			public Game mapRow(ResultSet resultSet, int idx) throws SQLException {
-				GameDO gameDO;
-				
-				try {
-					gameDO = objectMapper.readValue(resultSet.getString("data"), GameDO.class);
-					
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}		
+				String data = resultSet.getString("data");
+				GameDO gameDO = objectSerializer.deserialize(data, GameDO.class);
 				
 				Game game = gameDO.toGame();
 				game.setVersion(resultSet.getInt("version"));

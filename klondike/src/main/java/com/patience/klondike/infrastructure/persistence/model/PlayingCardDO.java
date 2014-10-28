@@ -12,6 +12,7 @@ public class PlayingCardDO {
 	
 	public PlayingCardDO() {
 	}
+	
 	public PlayingCardDO(PlayingCard card) {
 		this.rank = card.rank().name();
 		this.suit = card.suit().name();

@@ -24,7 +24,8 @@ public class CardFlipped implements DomainEvent {
 	}
 	
 	@JsonCreator
-	public CardFlipped(@JsonProperty("gameId") GameId gameId, @JsonProperty("card") PlayingCard card,
+	public CardFlipped(@JsonProperty("gameId") GameId gameId, 
+			@JsonProperty("card") PlayingCard card,
 			@JsonProperty("occurredOn") DateTime occurredOn) {
 		this.gameId = gameId;
 		this.card = card;

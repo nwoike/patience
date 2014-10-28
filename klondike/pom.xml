@@ -15,7 +15,7 @@
     
     <properties>
 	    <downloadSources>true</downloadSources>
-	    <start-class>com.patience.klondike.infrastructure.application.Application</start-class>
+	    <start-class>com.patience.klondike.application.config.Application</start-class>
 	</properties>
     
     <dependencies>

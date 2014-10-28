@@ -8,9 +8,9 @@ import com.patience.common.domain.model.card.Suit;
 
 public class PlayingCardRepresentation {
 
-	private String rank;
+	private final String rank;
 	
-	private String suit;
+	private final String suit;
 	
 	public PlayingCardRepresentation(PlayingCard card) {
 		this.rank = card.rank().name();

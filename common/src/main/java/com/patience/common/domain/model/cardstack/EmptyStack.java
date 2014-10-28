@@ -1,7 +1,7 @@
 package com.patience.common.domain.model.cardstack;
 
 import com.patience.common.domain.model.card.CardStack;
-import com.patience.common.specification.AbstractCardStackingStyle;
+import com.patience.common.domain.model.cardstack.style.AbstractCardStackingStyle;
 
 public class EmptyStack extends AbstractCardStackingStyle {
 

@@ -6,13 +6,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.card.Rank;
 import com.patience.domain.model.Entity;
-import com.patience.domain.model.event.DomainEventPublisher;
 import com.patience.klondike.application.IllegalMoveException;
-import com.patience.klondike.domain.model.game.scorer.PileType;
 import com.patience.klondike.domain.service.game.WinChecker;
 
 public class Game extends Entity {
@@ -32,9 +29,7 @@ public class Game extends Entity {
 		
 		new GameInitializer().setupNewGame();
 		
-		DomainEventPublisher
-			.instance()
-			.publish(new GameCreated(gameId));
+		publish(new GameCreated(gameId));
 	}
 
 	public Game(GameId gameId, Stock stock, Waste waste,
@@ -46,133 +41,92 @@ public class Game extends Entity {
 		this.tableauPiles = checkNotNull(tableauPiles, "TableauPiles must be provided.");
 	}
 	
-	public void drawCard() {			
+	public void drawCard() {	
 		PlayingCard card = stock.drawCard();
 		
 		if (card != null) {
 			waste.addCard(card);
-			
-		} else {
-			if (waste.isEmpty()) {
-				return;
-			}
-			
-			stock.recycle(waste);
-			
-			DomainEventPublisher
-				.instance()
-				.publish(new StockRecycled(gameId));
+			return;
+		} 
+
+		// Do not try to recycle an empty waste
+		if (waste.isEmpty()) {
+			return;
 		}
+			
+		stock.recycle(waste);
+		
+		publish(new StockRecycled(gameId));
 	}
 
-	public void moveCards(CardStack stack, int destinationTableauPileId) {
-		TableauPile destination = tableauPileOf(destinationTableauPileId);		
-		PlayingCard card = stack.topCard();
-		
-		if (waste.topCardMatches(card)) { 
-			waste.removeTopCard();
-			destination.addCards(stack);
-			
-			DomainEventPublisher
-				.instance()
-				.publish(new CardsMovedToTableau(gameId, stack.cards(), PileType.Waste));
-			
-			return;			
+	public void moveCards(List<PlayingCard> cards, int destinationTableauPileId) {
+		Pile origin = locateMovableCards(cards);
+		TableauPile destination = tableauPileOf(destinationTableauPileId);	
+				
+		if (origin == null) {
+			throw new IllegalMoveException("Cards were not able to be moved to destination.");
 		}
 		
-		for (Foundation foundation : foundations) {
-			if (foundation.topCardMatches(card)) {		
-				foundation.removeTopCard();
-				destination.addCards(stack);
-				
-				DomainEventPublisher
-					.instance()
-					.publish(new CardsMovedToTableau(gameId, stack.cards(), PileType.Foundation));
-				
-				return;
-			}
-		}
-			
-		for (TableauPile origin : tableauPiles) {
-			if (origin.contains(stack)) {			
-				origin.removeCards(stack);
-				destination.addCards(stack);
-				
-				DomainEventPublisher
-					.instance()
-					.publish(new CardsMovedToTableau(gameId, stack.cards(), PileType.Tableau));
-				
-				return;
-			}				
-		}
+		origin.removeCards(cards);
+		destination.addCards(cards);
 		
-		throw new IllegalMoveException("Cards were not able to be moved to destination.");
+		publish(new CardsMovedToTableau(gameId, cards, origin.pileType()));
 	}
 	
 	public void flipCard(int tableauPileId) {
 		TableauPile tableauPile = tableauPileOf(tableauPileId);		
 		tableauPile.flipTopCard();
 		
-		DomainEventPublisher
-			.instance()
-			.publish(new CardFlipped(gameId, tableauPile.flippedCards().topCard()));
+		publish(new CardFlipped(gameId, tableauPile.flippedCards().topCard()));
 	}	
 	
 	public void promoteCard(PlayingCard card, int destinationFoundationId) {
 		checkNotNull(card, "Playing card must be provided.");
 		
-		Foundation destination = foundationOf(destinationFoundationId);
+		Pile origin = locateMovableCard(card);
+		Foundation destination = foundationOf(destinationFoundationId);		
 		
-		if (waste.topCardMatches(card)) {	
-			waste.removeTopCard();
-			destination.addCard(card);
-			
-			DomainEventPublisher
-				.instance()
-				.publish(new CardPromoted(gameId, card, PileType.Waste));
-			
-			if (isWon()) {
-				DomainEventPublisher
-					.instance()
-					.publish(new GameWon(gameId));
-			}
-			
-			return;			
+		if (origin == null || origin.equals(destination)) {
+			throw new IllegalMoveException("Card was not able to be promoted.");
 		}
 		
-		for (Foundation candidate : foundations) {						
-			if (candidate.topCardMatches(card) && !candidate.equals(destination)) { 
-				candidate.removeTopCard();
-				destination.addCard(card);							
-				return;
-			}
-		}			
-
-		for (TableauPile tableauPile : tableauPiles) {
-			if (tableauPile.topCardMatches(card)) { 
-				tableauPile.removeCard(card);
-				destination.addCard(card);
-				
-				DomainEventPublisher
-					.instance()
-					.publish(new CardPromoted(gameId, card, PileType.Tableau));
-				
-				if (isWon()) {
-					DomainEventPublisher
-						.instance()
-						.publish(new GameWon(gameId));
-				}
-				
-				return;
-			}
-		}
+		origin.removeTopCard();
+		destination.addCard(card);
 		
-		throw new IllegalMoveException("Card was not able to be promoted.");
+		publish(new CardPromoted(gameId, card, origin.pileType()));
+		
+		if (isWon()) {
+			publish(new GameWon(gameId));
+		}	
 	}
-
+	
+	private Pile locateMovableCard(PlayingCard card) {
+		return locateMovableCards(newArrayList(card));
+	}
+	
+	private Pile locateMovableCards(List<PlayingCard> cards) {
+		if (waste.topCardsMatch(cards)) {	
+			return waste;
+		}
+		
+		for (Foundation foundation : foundations) {						
+			if (foundation.topCardsMatch(cards)) { 
+				return foundation;
+			}
+		}
+		
+		for (TableauPile tableauPile : tableauPiles) {
+			if (tableauPile.topCardsMatch(cards)) { 
+				return tableauPile;
+			}
+		}
+		
+		return null;
+	}
+	
 	public boolean isWon() {
-		for (Foundation foundation : foundations) {
-			if (foundation.topCard().rank() != Rank.King) {
+		for (Foundation foundation : foundations) {			
+			if (foundation.isEmpty() || foundation.topCard().rank() != Rank.King) {
 				return false;
 			}
 		}
@@ -180,9 +134,9 @@ public class Game extends Entity {
 		return true;
 	}
 	
-	public boolean isWinnable(WinChecker winnableChecker) {
-		checkNotNull(winnableChecker, "WinnableChecker must be provided.");
-		return winnableChecker.isWinnable(this);
+	public boolean isWinnable(WinChecker winChecker) {
+		checkNotNull(winChecker, "WinChecker must be provided.");
+		return winChecker.isWinnable(this);
 	}
 	
 	private Foundation foundationOf(int foundationId) {
