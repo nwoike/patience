@@ -10,7 +10,7 @@ public abstract class Entity {
 	protected Entity() {		
 	}
 	
-	public void publish(DomainEvent event) {
+	protected void publish(DomainEvent event) {
 		DomainEventPublisher
 			.instance()
 			.publish(event);

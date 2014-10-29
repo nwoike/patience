@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-spinner" attributes="">
+  <template>
+    <link rel="stylesheet" href="es-spinner.css">
+	<div id="spinner">
+      <div class="spinner-container container1">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+      <div class="spinner-container container2">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+      <div class="spinner-container container3">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+        
+      Polymer({
+		loading: false,
+		 
+        domReady: function() {
+            this.hide();  
+        },
+          
+        hide: function() {
+			this.loading = false;
+            this.$.spinner.classList.add("hidden");  
+        },
+          
+        show: function() {
+			this.loading = true;
+            this.$.spinner.classList.remove("hidden");  
+        },
+		  
+		toggle: function() {
+			this.loading ? this.hide() : this.show();	
+		}
+      });
+    })();
+  </script>
+</polymer-element>

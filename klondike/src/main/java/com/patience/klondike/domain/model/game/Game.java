@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
-import java.util.Random;
 
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.card.Rank;
@@ -27,7 +26,7 @@ public class Game extends Entity {
 	public Game(GameId gameId) {
 		this.setGameId(gameId);
 		
-		new GameInitializer().setupNewGame();
+		new GameInitializer().setupNewGame(gameId);
 		
 		publish(new GameCreated(gameId));
 	}
@@ -35,10 +34,10 @@ public class Game extends Entity {
 	public Game(GameId gameId, Stock stock, Waste waste,
 			List<Foundation> foundations, List<TableauPile> tableauPiles) {
 		this.setGameId(gameId);
-		this.stock = checkNotNull(stock, "Stock must be provided.");
-		this.waste = checkNotNull(waste, "Waste must be provided.");
-		this.foundations = checkNotNull(foundations, "Foundations must be provided.");
-		this.tableauPiles = checkNotNull(tableauPiles, "TableauPiles must be provided.");
+		this.setStock(stock);
+		this.setWaste(waste);
+		this.setFoundations(foundations);
+		this.setTableauPiles(tableauPiles);
 	}
 	
 	public void drawCard() {	
@@ -182,11 +181,27 @@ public class Game extends Entity {
 		this.gameId = gameId;
 	}
 	
+	private void setStock(Stock stock) {
+		this.stock = checkNotNull(stock, "Stock must be provided.");
+	}
+	
+	private void setWaste(Waste waste) {
+		this.waste = checkNotNull(waste, "Waste must be provided.");
+	}
+	
+	private void setFoundations(List<Foundation> foundations) {
+		this.foundations = checkNotNull(foundations, "Foundations must be provided.");
+	}
+	
+	public void setTableauPiles(List<TableauPile> tableauPiles) {
+		this.tableauPiles = checkNotNull(tableauPiles, "TableauPiles must be provided.");
+	}	
+	
 	private class GameInitializer {
 		
-		private void setupNewGame() {
+		private void setupNewGame(GameId gameId) {
 			Deck deck = new Deck();
-			deck.shuffle(new Random().nextLong());
+			deck.shuffle(gameId.toSeed());
 			
 			initializeWaste();
 			initializeStock(deck);			

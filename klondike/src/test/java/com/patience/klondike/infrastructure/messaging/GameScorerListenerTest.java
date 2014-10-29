@@ -7,6 +7,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -41,7 +43,9 @@ public class GameScorerListenerTest {
 	
 	@Test
 	public void cardFlipped() {
-		CardFlipped event = new CardFlipped(new GameId("1"), PlayingCard.AceOfClubs);
+		GameId gameId = new GameId(UUID.randomUUID());
+		
+		CardFlipped event = new CardFlipped(gameId, PlayingCard.AceOfClubs);
 		MessageProperties messageProperties = new MessageProperties();
 		messageProperties.setReceivedRoutingKey("patience.klondike.CardFlipped");
 		
@@ -49,7 +53,7 @@ public class GameScorerListenerTest {
 		scorerListener.onMessage(message);
 		
 		ArgumentCaptor<PlayingCardRepresentation> captor = ArgumentCaptor.forClass(PlayingCardRepresentation.class);
-		verify(mockScoreService).scoreCardFlip(eq("1"), captor.capture());
+		verify(mockScoreService).scoreCardFlip(eq(gameId.id()), captor.capture());
 		
 		PlayingCardRepresentation cardRepresentation = captor.getValue();
 		assertThat("Ace", equalTo(cardRepresentation.getRank()));
@@ -57,8 +61,10 @@ public class GameScorerListenerTest {
 	}
 		
 	@Test
-	public void cardPromoted() {
-		CardPromoted event = new CardPromoted(new GameId("1"), PlayingCard.AceOfClubs, PileType.Tableau);
+	public void cardPromoted() {		
+		GameId gameId = new GameId(UUID.randomUUID());
+		
+		CardPromoted event = new CardPromoted(gameId, PlayingCard.AceOfClubs, PileType.Tableau);
 
 		MessageProperties messageProperties = new MessageProperties();
 		messageProperties.setReceivedRoutingKey("patience.klondike.CardPromoted");
@@ -67,7 +73,7 @@ public class GameScorerListenerTest {
 		scorerListener.onMessage(message);
 		
 		ArgumentCaptor<PlayingCardRepresentation> captor = ArgumentCaptor.forClass(PlayingCardRepresentation.class);
-		verify(mockScoreService).scoreCardMove(eq("1"), captor.capture(), eq("Tableau"), eq("Foundation"));
+		verify(mockScoreService).scoreCardMove(eq(gameId.id()), captor.capture(), eq("Tableau"), eq("Foundation"));
 		
 		PlayingCardRepresentation cardRepresentation = captor.getValue();
 		assertThat("Ace", equalTo(cardRepresentation.getRank()));
@@ -76,7 +82,9 @@ public class GameScorerListenerTest {
 	
 	@Test
 	public void cardsMovedToTableau() {
-		CardsMovedToTableau event = new CardsMovedToTableau(new GameId("1"), newArrayList(PlayingCard.AceOfClubs), PileType.Waste);
+		GameId gameId = new GameId(UUID.randomUUID());
+		
+		CardsMovedToTableau event = new CardsMovedToTableau(gameId, newArrayList(PlayingCard.AceOfClubs), PileType.Waste);
 
 		MessageProperties messageProperties = new MessageProperties();
 		messageProperties.setReceivedRoutingKey("patience.klondike.CardsMovedToTableau");
@@ -85,7 +93,7 @@ public class GameScorerListenerTest {
 		scorerListener.onMessage(message);
 		
 		ArgumentCaptor<PlayingCardRepresentation> captor = ArgumentCaptor.forClass(PlayingCardRepresentation.class);
-		verify(mockScoreService).scoreCardMove(eq("1"), captor.capture(), eq("Waste"), eq("Tableau"));
+		verify(mockScoreService).scoreCardMove(eq(gameId.id()), captor.capture(), eq("Waste"), eq("Tableau"));
 		
 		PlayingCardRepresentation cardRepresentation = captor.getValue();
 		assertThat("Ace", equalTo(cardRepresentation.getRank()));
@@ -94,7 +102,9 @@ public class GameScorerListenerTest {
 
 	@Test
 	public void stockRecycled() {
-		StockRecycled event = new StockRecycled(new GameId("1"));
+		GameId gameId = new GameId(UUID.randomUUID());
+		
+		StockRecycled event = new StockRecycled(gameId);
 
 		MessageProperties messageProperties = new MessageProperties();
 		messageProperties.setReceivedRoutingKey("patience.klondike.StockRecycled");
@@ -102,6 +112,6 @@ public class GameScorerListenerTest {
 		Message message = new Message(domainEventSerializer.serialize(event).getBytes(), messageProperties);
 		scorerListener.onMessage(message);
 		
-		verify(mockScoreService).scoreStockRecycle("1");
+		verify(mockScoreService).scoreStockRecycle(gameId.id());
 	}
 }

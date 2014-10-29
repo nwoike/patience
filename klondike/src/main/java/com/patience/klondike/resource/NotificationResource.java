@@ -16,7 +16,7 @@ import com.patience.domain.model.event.StoredEvent;
 @RequestMapping("/notifications")
 public class NotificationResource {
 
-	// TODO: Replace with Notification Atom Service
+	// TODO: Replace with HATEOAS/Atom-based Notification Resource
 	@Autowired
 	private EventStore eventStore;
 	

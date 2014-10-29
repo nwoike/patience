@@ -1,0 +1,80 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-waste" attributes="visibleCount, spacing">
+  <template>
+    <link rel="stylesheet" href="es-waste.css">
+	<div class="waste" layout horizontal>
+		<content select="es-card"></content>
+	</div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+		spacing: 50,
+		visibleCount: 1,
+		
+		domReady: function() {
+			this.render();
+		},
+		
+		render: function() {
+			var cards = this.querySelectorAll("es-card:nth-last-child(-n+" + this.visibleCount + ")");
+			
+			if (cards.length > 0) {
+				for (var i=0,len=cards.length; i<len; i++) {
+					var card = cards[i];
+					card.style.left = this.spacing * i + 'px';
+					card.style.zIndex = i;
+				}
+			}
+		},
+		
+        containsCard: function(card) {
+            return this.querySelector('es-card[rank="' + card.rank + '"][suit="' + card.suit + '"]');
+        },
+        
+        addCards: function(cards) {
+            var fragment = document.createDocumentFragment();
+           
+            for (var i = 0, len = cards.length; i<len; i++) {
+                fragment.appendChild(cards[i]);   
+            }
+            
+            this.appendChild(fragment);            
+			this.render();
+		},
+          
+		addCard: function(card) {
+			if (!card) return false;
+			
+			this.appendChild(card);
+			this.render();
+			
+			return true;
+		},
+		
+		removeCards: function() {
+			var removed = [];
+			
+			while (this.hasChildNodes()) {
+				removed.push(this.removeChild(this.lastChild));
+			}
+			
+			return removed;
+		},
+		
+        topCard: function() {
+			return this.querySelector("es-card:last-child");
+		},
+          
+        isEmpty: function() {
+            return this.querySelectorAll("es-card").length == 0;   
+        }
+      });
+
+    })();
+  </script>
+</polymer-element>

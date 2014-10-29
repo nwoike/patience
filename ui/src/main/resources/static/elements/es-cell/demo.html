@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-card demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-cell.html">  
+  <link rel="import" href="../es-card/es-card.html">  
+  
+  <style>
+	es-cell {
+		margin-right: 10px;
+	}
+  </style>
+</head>
+
+<body unresolved>
+	<div layout horizontal>
+		<es-cell></es-cell>	
+		
+		<es-cell>
+			<es-card rank="Ace" suit="Clubs"></es-card>
+		</es-cell>	
+		
+		<es-cell id="emptyCell"></es-cell>
+	</div>
+	
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			
+			var emptyCell = document.querySelector('#emptyCell');
+			
+			var card = document.createElement("es-card");
+			card.setAttribute("rank", "Four");
+			card.setAttribute("suit", "Clubs");
+			
+			var otherCard = document.createElement("es-card");
+			otherCard.setAttribute("rank", "Five");
+			otherCard.setAttribute("suit", "Clubs");
+			
+			setTimeout(function() {
+				console.log(emptyCell.setCard(card));	
+				console.log(emptyCell.setCard(otherCard));	
+			}, 1500);
+			
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+
+:host {
+  display: block;
+}
+
+div.stock {
+	min-height: 190px;
+	min-width: 140px;
+	background-image: url("/images/card_back_blue_2.png");
+	background-repeat: no-repeat;
+}
+
+div.stock.empty {
+    background-image: url("/images/card_back_shadow_2.png");
+}

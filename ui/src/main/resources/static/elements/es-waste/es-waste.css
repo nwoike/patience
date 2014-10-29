@@ -1,0 +1,16 @@
+
+:host {
+  display: block;
+}
+
+::content es-card {
+	position: absolute;
+}
+
+div.waste {
+	position: relative;
+	height: 190px;
+	width: 149px;
+	background-image: url("/images/card_back_shadow_2.png");
+	background-repeat: no-repeat;
+}

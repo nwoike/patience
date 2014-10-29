@@ -1,0 +1,11 @@
+:host {
+	display: block;
+}
+
+p.score {
+    text-align: center;
+    margin-top: 5px;
+    font-family: "Calibri";
+    font-weight: bold;    
+    font-size: 14pt;   
+}

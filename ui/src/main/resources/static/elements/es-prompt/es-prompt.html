@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-prompt" attributes="title, message, dismiss, confirm">
+  <template> 
+      <link rel="stylesheet" href="es-prompt.css">    
+      <div id="prompt" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="newGame" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+             <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">{{title}}</h4>
+              </div>
+              <div class="modal-body">
+                <p>{{message}}</p>
+              </div>
+              <div class="modal-footer">
+                <button id="dismissBtn" type="button" class="btn btn-default" data-dismiss="modal">{{dismiss}}</button>
+                <button id="confirmBtn" type="button" class="btn btn-primary">{{confirm}}</button>
+              </div>
+            </div>
+          </div>
+      </div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+	 
+      Polymer({
+          title: 'Klondike',
+          dismiss: 'Cancel',          
+          confirm: 'Yes',
+          
+          domReady: function() {
+             this.$.confirmBtn.addEventListener('click', function() {
+                 this.fire('confirm');
+                 this.hide(); 
+             }.bind(this));
+              
+             this.$.dismissBtn.addEventListener('click', function() {
+                this.fire('dismiss'); 
+             }.bind(this));
+          },
+          
+		  show: function() {
+             $(this.$.prompt).modal('show'); 
+          },
+          
+          hide: function() {
+            $(this.$.prompt).modal('hide'); 
+          }
+      });
+
+    })();
+  </script>
+</polymer-element>

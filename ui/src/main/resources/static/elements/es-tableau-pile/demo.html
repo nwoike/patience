@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-card demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-tableau-pile.html">  
+  <link rel="import" href="../es-card-back/es-card-back.html">  
+  <link rel="import" href="../es-card/es-card.html">  
+  
+  <style>
+	es-tableau-pile {
+		margin-right: 20px;
+	}
+  </style>
+</head>
+
+<body unresolved>
+	<div layout horizontal>
+		<es-tableau-pile unflippedCount="0"></es-tableau-pile>
+		
+		<!-- Only accept Kings when empty -->
+		<es-tableau-pile unflippedCount="0"></es-tableau-pile>
+		
+		<es-tableau-pile unflippedCount="0">
+			<es-card rank="Ace" suit="Clubs"></es-card>
+		</es-tableau-pile>
+		
+		<es-tableau-pile unflippedCount="2">
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="King" suit="Hearts"></es-card>
+			<es-card rank="Queen" suit="Clubs"></es-card>		
+		</es-tableau-pile>	
+		
+		<es-tableau-pile unflippedCount="1"></es-tableau-pile>
+    
+	</div>
+	
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+            var tableauPile = document.querySelector("es-tableau-pile:last-child");
+	
+			var card = document.createElement("es-card");
+			card.setAttribute("rank", "Jack");
+			card.setAttribute("suit", "Diamonds");
+			
+			console.log(tableauPile.addCards(card));
+			
+			var other = document.createElement("es-card");
+			other.setAttribute("rank", "Two");
+			other.setAttribute("suit", "Diamonds");
+			
+			console.log(tableauPile.addCards(other));
+			
+			var another = document.createElement("es-card");
+			another.setAttribute("rank", "Ten");
+			another.setAttribute("suit", "Clubs");
+			
+			console.log(tableauPile.addCards(another));
+			
+			var more = document.createElement("es-card");
+			more.setAttribute("rank", "Nine");
+			more.setAttribute("suit", "Diamonds");
+			
+			console.log(tableauPile.addCards(more));
+			
+			var emptyTableauPile = document.querySelector("es-tableau-pile:nth-child(2)");
+			
+			console.log(emptyTableauPile.addCards(another));
+			
+			var king = document.createElement("es-card");
+			king.setAttribute("rank", "King");
+			king.setAttribute("suit", "Diamonds");
+			
+			console.log(emptyTableauPile.addCards(king));
+			
+			var flippableTableauPile = document.querySelector("es-tableau-pile:last-of-type");
+			flippableTableauPile.flipTopCardTo(another);
+            
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-score" attributes="score">
+  <template> 
+     <link rel="stylesheet" href="es-score.css">
+     <p class="score">{{score}} Points</p>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+	 
+      Polymer({
+          score: 0,
+          
+          updateScore: function(newScore) {
+              this.score = newScore;
+          }
+      });
+
+    })();
+  </script>
+</polymer-element>

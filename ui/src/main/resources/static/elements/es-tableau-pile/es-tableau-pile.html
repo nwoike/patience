@@ -1,0 +1,131 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-tableau-pile" attributes="unflippedCount, unflippedSpacing, flippedSpacing">
+  <template>
+    <link rel="stylesheet" href="es-tableau-pile.css">
+	<div class="tableau-pile">
+        <content select="es-card-back"></content>
+		<content select="es-card"></content>
+	</div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+		unflippedCount: 0,
+		unflippedSpacing: 20,
+		flippedSpacing: 30,
+		
+		domReady: function() {
+          this.render();
+		},
+		
+    
+        fixCardBacks: function() {
+            var cardBacks = this.querySelectorAll('es-card-back');
+            
+            for (var i=0, len=cardBacks.length; i < len; i++) {
+                this.removeChild(cardBacks[i]);
+            }
+                       
+			// Add unflipped cards based on unflippedCount
+			for (i=0; i < this.unflippedCount; i++) {			
+				var card = document.createElement('es-card-back');
+				this.insertBefore(card, this.querySelector('es-card'));
+			}
+        },
+        
+		render: function() {  
+            this.fixCardBacks();
+          
+            var unflippedCount = this.querySelectorAll('es-card-back').length;
+			var unflippedCards = this.querySelectorAll('es-card-back:not(:first-child)');			
+            
+            this.unflippedCount = unflippedCount;
+          
+			for (var i=0, len=unflippedCards.length; i < len; i++) {
+				var card = unflippedCards[i];
+				card.style.top = this.unflippedSpacing * (i + 1) + 'px';				
+			}
+
+			var flippedCards = this.querySelectorAll('es-card:not(:first-child)');
+			var unflippedOffset = this.unflippedSpacing * (unflippedCards.length + 1);
+
+			for (i=0, len=flippedCards.length; i < len; i++) {
+				var card = flippedCards[i];
+                
+                if (unflippedCount == 0 && i == 0) {
+                    unflippedOffset = this.flippedSpacing;                     
+                }     
+                
+                card.style.top = unflippedOffset + (this.flippedSpacing * i) + 'px';
+			}
+		},
+		
+		flipTopCardTo: function(card) {
+			var cardBack = this.querySelector("es-card-back:last-child");
+			
+			if (cardBack) {
+				this.removeChild(cardBack);
+				this.addCards(card, true);
+			}
+		},
+		
+        containsCard: function(card) {
+            return this.querySelector('es-card[rank="' + card.rank + '"][suit="' + card.suit + '"]');
+        },
+        
+		isAddable: function(card) {
+			var topCard = this.querySelector('es-card:last-child');
+			
+			if (!topCard && card.rank != 'King') {
+				return false;
+			}
+			
+			if (topCard && !(topCard.follows(card) && card.oppositeSuitOf(topCard))) {
+				return false;
+			}
+			
+			return true;
+		},
+		
+		addCards: function(cards, ignoreChecks) {
+			if (!cards) return;			
+			
+            cards = !Array.isArray(cards) ? [cards] : cards;
+            
+            var fragment = document.createDocumentFragment();
+            
+			for (var i=0, len=cards.length; i<len; i++) {
+				var card = cards[i];
+				
+				if (!ignoreChecks && !this.isAddable(card)) {
+					return false;
+				}
+				
+				card.style.top = 0;
+				card.style.left = 0;
+                
+				fragment.appendChild(card);	
+			}
+            
+            this.appendChild(fragment);
+			this.render();
+            
+			return true;
+		},
+		
+        hasUnflippedCard: function() {
+            return this.querySelectorAll('es-card-back').length > 0;  
+        },
+          
+        flippedCards: function() {
+			return this.querySelectorAll("es-card");
+		}
+      });
+
+    })();
+  </script>
+</polymer-element>

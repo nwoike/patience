@@ -1,0 +1,16 @@
+
+:host {
+  display: block;
+}
+
+::content es-card, ::content es-card-back {
+	position: absolute;
+}	
+
+div.stack {
+	position: relative;
+	min-height: 190px;
+	min-width: 140px;
+	background-image: url("/images/card_back_shadow_2.png");
+	background-repeat: no-repeat;
+}

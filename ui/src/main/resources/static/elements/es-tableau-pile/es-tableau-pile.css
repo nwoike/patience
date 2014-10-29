@@ -1,0 +1,15 @@
+
+:host {
+  display: block;
+}
+
+::content es-card, ::content es-card-back {
+	position: absolute;
+}	
+
+.tableau-pile {
+	position: relative;
+	min-height: 190px;
+	min-width: 140px;
+	background-image: url("/images/card_back_shadow_2.png");
+}

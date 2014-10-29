@@ -11,13 +11,11 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Maps;
 
-@Transactional(isolation=Isolation.SERIALIZABLE, propagation=Propagation.REQUIRED)
+@Transactional
 public class JdbcEventStore implements EventStore {
 
 	private DomainEventSerializer eventSerializer;

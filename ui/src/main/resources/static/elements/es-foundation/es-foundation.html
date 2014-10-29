@@ -1,0 +1,82 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-foundation" attributes="">
+  <template>
+    <link rel="stylesheet" href="es-foundation.css">
+	<div class="foundation">       
+		<content select="es-card"></content>
+	</div>
+  </template>
+  
+  <!-- explore exposing empty as an attribute -->
+	
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+		
+		isAddable: function(card) {
+			var topCard = this.querySelector('es-card:last-child');
+			
+			if (!topCard && card.rank != 'Ace') {
+				return false;				
+			} 
+
+			if (topCard && !(card.follows(topCard) && card.suit == topCard.suit)) {
+				return false;
+			}
+						
+			return true;
+		},
+        
+		containsCard: function(card) {
+            return this.querySelector('es-card[rank="' + card.rank + '"][suit="' + card.suit + '"]');
+        },
+        
+        loadCards: function(cards) {
+            var fragment = document.createDocumentFragment();
+            
+            for(var i=0,len=cards.length; i<len; i++) {                
+                var card = cards[i];
+          
+                this.suit = card.suit;
+            
+                card.style.top = 0;
+                card.style.left = 0;
+                card.style.zIndex = 0;
+
+                fragment.appendChild(card);
+            }
+            
+            this.appendChild(fragment);
+        },
+          
+		addCard: function(card) {
+			if (!this.isAddable(card)) {
+				return false;
+			}
+
+            this.suit = card.suit;
+            
+			card.style.top = 0;
+			card.style.left = 0;
+			card.style.zIndex = 0;
+			
+			this.appendChild(card);
+			
+			return true;
+		},
+		
+		isEmpty: function() {
+			return this.querySelectorAll('es-card').length == 0;	
+		},
+		  
+        topCard: function() {
+			return this.querySelectorAll("es-card:last-child");
+		}
+      });
+
+    })();
+  </script>
+</polymer-element>

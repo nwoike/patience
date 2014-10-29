@@ -1,0 +1,10 @@
+
+:host {
+  display: block;
+}
+
+.card-back {
+	width: 140px;
+	height: 190px;		
+	background-image: url("/images/card_back_blue_2.png");
+}

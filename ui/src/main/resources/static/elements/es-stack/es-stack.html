@@ -1,0 +1,65 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-stack" attributes="spacing">
+  <template>
+    <link rel="stylesheet" href="es-stack.css">
+	<div class="stack">
+		<content select="es-card"></content>
+	</div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+		spacing: 30,
+		
+		domReady: function() {	
+			this.render();
+		},
+		
+		render: function() {	
+			var cards = this.querySelectorAll('es-card:not(:first-child)');
+			
+			for (var i=0, len=cards.length; i < len; i++) {
+				var card = cards[i];
+				card.style.top = this.spacing * (i+1) + 'px';
+				card.style.zIndex = i;
+			}
+		},
+		
+          /*
+        addCards: function(cards) {
+            var fragment = document.createDocumentFragment();
+            
+            for (var i=0,len=cards.length; i<len; i++) {
+                var card = cards[i];
+                card.style.top = 0;
+                card.style.left = 0;			
+                fragment.appendChild(card);                  
+            }
+            
+            this.appendChild(fragment);
+            this.render();
+        },
+          */
+          
+		addCard: function(card) {			
+			card.style.top = 0;
+			card.style.left = 0;			
+			this.appendChild(card);
+			
+			this.render();
+			
+			return true;
+		},
+		
+        flippedCards: function() {
+			return this.querySelectorAll("es-card");
+		}
+      });
+
+    })();
+  </script>
+</polymer-element>

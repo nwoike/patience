@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-cell" attributes="">
+  <template>
+    <link rel="stylesheet" href="es-cell.css">
+	<div class="cell">
+		<content select="es-card"></content>
+	</div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+				
+		isEmpty: function() {
+			var card = this.querySelector('es-card');
+			return !card;
+		},
+        
+		setCard: function(card) {
+			if (!this.isEmpty()) {
+				return false;
+			}
+           
+			card.style.top = 0;
+			card.style.left = 0;
+			card.style.zIndex = 0;
+			
+			this.appendChild(card);
+			
+			return true;
+		}
+      });
+
+    })();
+  </script>
+</polymer-element>

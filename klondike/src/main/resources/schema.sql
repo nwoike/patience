@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS Klondike ( 
-    game_id      VARCHAR(32)   PRIMARY KEY,
+    game_id      VARCHAR(36)   PRIMARY KEY,
     data         LONGVARCHAR   NOT NULL,
     version		 INTEGER       NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS KlondikeScore ( 
-    game_id      VARCHAR(32)   PRIMARY KEY,
+    game_id      VARCHAR(36)   PRIMARY KEY,
     data         LONGVARCHAR   NOT NULL,
     version		 INTEGER       NOT NULL
 );

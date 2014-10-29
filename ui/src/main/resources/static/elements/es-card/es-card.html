@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-card" attributes="back, rank, suit">
+  <template> 
+    <link rel="stylesheet" href="es-card.css"> 
+	<div id="card" class="card"></div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+	  var ranks = [
+		'Ace',
+		'Two',
+		'Three',
+		'Four',
+		'Five',
+		'Six',
+		'Seven',
+		'Eight',
+		'Nine',
+		'Ten',
+		'Jack',
+		'Queen',
+		'King'
+	  ];
+
+      Polymer({
+		back: true,
+		rank: undefined,
+		suit: undefined,
+		
+		// TODO: Update class when properties change with property listener
+		domReady: function() {
+			if (this.rank && this.suit) {
+				this.$.card.className = this.$.card.className + " " + this.rank.toLowerCase() + "-" + this.suit.toLowerCase();
+			}
+		},
+		
+		follows: function(card) {
+			return ranks.indexOf(this.rank) == ranks.indexOf(card.rank) + 1;
+		},
+		
+		oppositeSuitOf: function(card) {
+			var otherSuit = card.getAttribute('suit');
+
+			return ((otherSuit == "Clubs" || otherSuit == "Spades") && (this.suit == "Hearts" || this.suit == "Diamonds"))
+				|| ((otherSuit == "Hearts" || otherSuit == "Diamonds") && (this.suit == "Clubs" || this.suit == "Spades"));
+		}
+      });
+
+    })();
+  </script>
+</polymer-element>

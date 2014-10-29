@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-card demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-foundation.html">  
+  <link rel="import" href="../es-card/es-card.html">  
+  
+  <style>
+	es-foundation {
+		margin-right: 10px;
+	}
+  </style>
+</head>
+
+<body unresolved>
+	<div layout horizontal>
+		<es-foundation>
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="Two" suit="Hearts"></es-card>
+			<es-card rank="Three" suit="Clubs"></es-card>		
+		</es-foundation>	
+		
+		<es-foundation></es-foundation>
+		
+		<es-foundation id="emptyFoundation"></es-foundation>
+	</div>
+	
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			var foundation = document.querySelector('es-foundation:first-child');
+			
+			var card = document.createElement("es-card");
+			card.setAttribute("rank", "Four");
+			card.setAttribute("suit", "Clubs");
+			
+			console.log(foundation.addCard(card));
+			
+			var other = document.createElement("es-card");
+			other.setAttribute("rank", "Five");
+			other.setAttribute("suit", "Hearts");	
+			
+			console.log(foundation.addCard(other));
+			
+			
+			var emptyFoundation = document.querySelector('#emptyFoundation');
+			
+			var ace = document.createElement("es-card");
+			ace.setAttribute("rank", "Ace");
+			ace.setAttribute("suit", "Hearts");	
+			
+			console.log(emptyFoundation.addCard(other));
+			console.log(emptyFoundation.addCard(ace));
+            
+            var two = document.createElement("es-card");
+			two.setAttribute("rank", "Two");
+			two.setAttribute("suit", "Hearts");	
+            
+            console.log(emptyFoundation.isAddable(two));
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-deck demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-deck.html">  
+  
+  <style>
+
+	#cards es-card {
+		display: inline-block;
+	}
+	
+	es-card {
+		margin-right: 10px;
+	}
+  </style>
+</head>
+
+<body unresolved>
+	<es-deck></es-deck>
+	<div id="cards"></div>
+	
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			var deck = document.querySelector('es-deck');
+			var div = document.querySelector("#cards");
+			
+			for (var i=0; i<51; i++) {
+				var card = deck.draw();
+				div.appendChild(card);
+				console.log(card.getAttribute('rank') + " of " + card.getAttribute('suit'));				
+			}
+		});
+	</script>
+</body>
+
+</html>

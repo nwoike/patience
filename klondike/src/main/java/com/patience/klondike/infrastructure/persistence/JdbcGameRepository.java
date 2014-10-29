@@ -46,7 +46,7 @@ public class JdbcGameRepository implements GameRepository {
 	
 	@Override
 	public GameId nextIdentity() {		
-		return new GameId(UUID.randomUUID().toString());
+		return new GameId(UUID.randomUUID());		
 	}
 
 	@Override

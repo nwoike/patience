@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-menu demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+ 
+  <link rel="stylesheet" href="../../bower_components/bootstrap/css/bootstrap.min.css">
+ 
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-menu.html">  
+  
+  <style>
+      es-menu {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+  </style>
+</head>
+
+<body unresolved>
+    <es-menu></es-menu>
+
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			var menu = document.querySelector('es-menu');
+            console.log(menu);
+            
+            menu.addEventListener('new-game', function() {
+                console.log('New game clicked');
+            });
+            
+            menu.addEventListener('settings', function() {
+                console.log('Settings clicked');
+            });
+		});
+	</script>
+</body>
+
+</html>

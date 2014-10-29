@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Solitaire</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <link rel="stylesheet" href="bower_components/bootstrap/css/bootstrap.min.css">
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="bower_components/jqueryui/themes/base/draggable.css">
+  <!-- endbuild-->
+  
+  <script src="bower_components/platform/platform.js"></script>
+  <script src="bower_components/jquery/jquery.min.js"></script>
+  <script src="bower_components/jqueryui/jquery-ui.min.js"></script>    
+  <script src="bower_components/bootstrap/js/bootstrap.min.js"></script>
+ 
+  <!-- build:vulcanized elements/elements.vulcanized.html -->
+  <link rel="import" href="bower_components/polymer/polymer.html">
+  <link rel="import" href="elements/elements.html">
+  <!-- endbuild-->
+  
+</head>
+
+<body unresolved>
+    
+  <es-menu>
+      <es-score></es-score>  
+  </es-menu>
+     
+  <es-prompt title="Klondike" confirm="New Game" message="Do you want to start a new game?"></es-prompt>
+      
+  <div class="klondike" layout vertical>
+	  <div layout horizontal>
+		<es-stock>
+            <es-spinner></es-spinner>  
+        </es-stock>
+		  
+		<es-waste></es-waste>
+		  
+	  	<div id="foundations" layout horizontal flex end-justified>
+			<es-foundation id="1"></es-foundation>
+			<es-foundation id="2"></es-foundation>
+			<es-foundation id="3"></es-foundation>
+			<es-foundation id="4"></es-foundation>
+		</div>
+	  </div>
+		
+	  <div id="tableau" layout horizontal flex justified>
+		<es-tableau-pile id="1"></es-tableau-pile>  
+		<es-tableau-pile id="2"></es-tableau-pile>		  
+		<es-tableau-pile id="3"></es-tableau-pile>		  
+		<es-tableau-pile id="4"></es-tableau-pile>		
+		<es-tableau-pile id="5"></es-tableau-pile>		
+		<es-tableau-pile id="6"></es-tableau-pile>		
+		<es-tableau-pile id="7"></es-tableau-pile>
+	  </div>
+  </div>
+  
+  <!-- build:js scripts/app.js -->
+  <script src="scripts/klondike.js"></script>
+  <!-- endbuild-->
+
+</body>
+
+</html>

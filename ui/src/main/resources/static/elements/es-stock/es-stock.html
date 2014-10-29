@@ -1,0 +1,59 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-stock" attributes="size">
+  <template>
+    <link rel="stylesheet" href="es-stock.css">
+	<div id="stock" class="stock">
+        <content></content>  
+    </div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+		size: 0,
+		
+        domReady: function() {	
+			this.render();
+		},
+          
+        sizeChanged: function() {
+            this.render();
+        },
+            
+        render: function() {
+            var el = this.querySelector('div.stock');
+            
+            if (this.size == 0) {
+                this.$.stock.classList.add("empty");  
+                
+            } else {
+                this.$.stock.classList.remove("empty");
+            }
+        },
+          
+        resize: function(cardCount) {
+            this.cardCount = cardCount;
+        },
+		
+		next: function() {
+            if (this.size > 0) {
+                this.size -= 1;
+                
+                return true;
+            }
+            
+            return false;
+		},
+          
+        isEmpty: function() {
+            return this.size == 0;   
+        }
+
+      });
+
+    })();
+  </script>
+</polymer-element>

@@ -46,7 +46,7 @@ public class GameResourceTest {
 	public void startGame() throws Exception {
 		mockMvc.perform(post("/klondike").accept("application/json"))
 	        .andExpect(status().isCreated())
-	        .andExpect(header().string("Location", containsString("/klondike/1")));
+	        .andExpect(header().string("Location", containsString("/klondike/d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb")));
 	}
 
 	@Test

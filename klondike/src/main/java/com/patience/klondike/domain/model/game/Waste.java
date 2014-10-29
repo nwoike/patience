@@ -75,4 +75,8 @@ public final class Waste implements Pile {
 	public PileType pileType() {
 		return PileType.Waste;
 	}
+
+	public int cardCount() {		
+		return stack.cardCount();
+	}
 }

@@ -111,6 +111,10 @@ public final class TableauPile implements Pile {
 		return unflippedCards.cardCount();
 	}
 	
+	public int flippedCardCount() {
+		return flippedCards.cardCount();
+	}
+	
 	@Override
 	public PileType pileType() {
 		return PileType.Tableau;

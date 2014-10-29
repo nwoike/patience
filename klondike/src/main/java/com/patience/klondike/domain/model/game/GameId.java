@@ -1,19 +1,24 @@
 package com.patience.klondike.domain.model.game;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class GameId {
 
-	private final String id;
+	private final UUID id;
 	
-	public GameId(String id) {
-		checkArgument(!isNullOrEmpty(id), "Id must be provided.");
-		this.id = id.replaceAll("[^A-Za-z0-9]", "");;
+	public GameId(UUID id) {
+		checkNotNull(id, "Id must be provided.");
+		this.id = id;
 	}
 	
+	public GameId(String uuid) {
+		this(UUID.fromString(uuid));
+	}
+
 	@JsonProperty
 	public String id() {
 		return id.toString();
@@ -31,6 +36,10 @@ public final class GameId {
 		}
 		
 		return false;
+	}
+
+	public long toSeed() {		
+		return id.getLeastSignificantBits();
 	}
 	
 	@Override

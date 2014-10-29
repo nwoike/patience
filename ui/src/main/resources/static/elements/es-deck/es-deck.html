@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../es-card/es-card.html">
+
+<polymer-element name="es-deck">
+  
+  <script>
+    (function () {
+      'use strict';
+
+	  var ranks = [
+		'Ace',
+		'Two',
+		'Three',
+		'Four',
+		'Five',
+		'Six',
+		'Seven',
+		'Eight',
+		'Nine',
+		'Ten',
+		'Jack',
+		'Queen',
+		'King'
+	  ];
+	  
+	  var suits = [
+		'Clubs',
+		'Spades', 
+		'Hearts',
+		'Diamonds'
+	  ]
+
+	  function shuffle(array) {
+		  var currentIndex = array.length, temporaryValue, randomIndex;
+
+		  while (0 !== currentIndex) {
+			  randomIndex = Math.floor(Math.random() * currentIndex);
+			  currentIndex -= 1;
+
+			  temporaryValue = array[currentIndex];
+			  array[currentIndex] = array[randomIndex];
+			  array[randomIndex] = temporaryValue;
+		  }
+
+		  return array;
+      }
+	  
+      Polymer({
+		cards: [],
+		
+		ready: function() {
+			for (var i=0,len=ranks.length; i<len; i++) {
+				for (var j=0, len2=suits.length; j<len2; j++) {
+					var card = document.createElement('es-card');
+					card.setAttribute("rank", ranks[i]);
+					card.setAttribute("suit", suits[j]);
+					
+					this.cards.push(card);
+				}
+			}
+			
+			shuffle(this.cards);
+		},
+		
+		draw: function() {
+			if (this.cards.length > 0) {
+				return this.cards.splice(this.cards.length - 1, 1)[0];
+			}
+			
+			return false;
+		}
+      });
+
+    })();
+  </script>
+</polymer-element>

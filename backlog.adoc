@@ -1,9 +1,0 @@
-=== Backlog
-. Add configurable stock passes option.
-. Add configurable waste draw count.
-. Add a move count tracker
-. Add Freecell game implementation.
-
-
-=== Implementation Notes
- . Purposely not using a mocking library like Mockito to give Fowler & Beck's mocking style a try. 

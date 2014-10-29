@@ -11,10 +11,19 @@ public class GameIdTest {
 
 	@Test
 	public void validId() {
-		String id = UUID.randomUUID().toString();
+		UUID id = UUID.randomUUID();
 		GameId gameId = new GameId(id);
 		
-		assertThat(gameId.id(), equalTo(id.replaceAll("-", "")));
+		assertThat(gameId.id(), equalTo(id.toString()));
+	}
+	
+	@Test
+	public void symetricId() {
+		UUID id = UUID.randomUUID();
+		GameId gameId = new GameId(id);
+		
+		GameId copy = new GameId(UUID.fromString(gameId.id()));		
+		assertThat(copy.id(), equalTo(id.toString()));
 	}
 	
 	@Test(expected=IllegalArgumentException.class)

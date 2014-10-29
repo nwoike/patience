@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-card demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-waste.html">  
+  <link rel="import" href="../es-card/es-card.html">  
+  
+  <style>
+	es-waste {
+		margin-bottom: 8px;
+	}
+  </style>
+</head>
+
+<body unresolved>
+	<div layout vertical>
+        <es-waste visibleCount="1"></es-waste>
+        
+		<es-waste visibleCount="1">
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="King" suit="Hearts"></es-card>
+			<es-card rank="Queen" suit="Clubs"></es-card>		
+		</es-waste>
+		
+		<es-waste>
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="King" suit="Hearts"></es-card>
+			<es-card rank="Queen" suit="Clubs"></es-card>		
+		</es-waste>	
+
+		<es-waste spacing="25" visibleCount="3">
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="King" suit="Hearts"></es-card>
+			<es-card rank="Queen" suit="Clubs"></es-card>	
+			<es-card rank="Five" suit="Diamonds"></es-card>
+			<es-card rank="Three" suit="Spades"></es-card>
+			<es-card rank="Queen" suit="Hearts"></es-card>
+		</es-waste>	
+		
+		<es-waste spacing="25" visibleCount="5">
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="King" suit="Hearts"></es-card>
+			<es-card rank="Queen" suit="Clubs"></es-card>	
+			<es-card rank="Five" suit="Diamonds"></es-card>
+			<es-card rank="Three" suit="Spades"></es-card>
+			<es-card rank="Queen" suit="Hearts"></es-card>
+		</es-waste>	
+	</div>
+	
+	<script>
+		window.addEventListener('polymer-ready', function(e) {		
+			var card = document.createElement("es-card");
+			card.setAttribute("rank", "Four");
+			card.setAttribute("suit", "Clubs");
+			
+			document.querySelector('es-waste:first-child').addCard(card);
+			document.querySelector('es-waste:last-of-type').addCard(card);
+		});
+	</script>
+</body>
+
+</html>

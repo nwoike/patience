@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-card demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-stack.html">  
+  <link rel="import" href="../es-card-back/es-card-back.html">  
+  <link rel="import" href="../es-card/es-card.html">  
+  
+  <style>
+	es-stack {
+		margin-right: 20px;
+	}
+  </style>
+</head>
+
+<body unresolved>
+	<div layout horizontal>
+		<es-stack>
+			<es-card rank="Ace" suit="Clubs"></es-card>
+			<es-card rank="King" suit="Hearts"></es-card>
+			<es-card rank="Queen" suit="Clubs"></es-card>		
+		</es-stack>	
+	</div>
+	
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			var stack = document.querySelector("es-stack");
+			
+			var king = document.createElement("es-card");
+			king.setAttribute("rank", "Jack");
+			king.setAttribute("suit", "Diamonds");
+			
+			stack.addCard(king);
+		});
+	</script>
+</body>
+
+</html>

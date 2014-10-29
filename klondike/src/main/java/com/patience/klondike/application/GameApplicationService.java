@@ -37,7 +37,7 @@ public class GameApplicationService {
 	}
 	
 	@Transactional(readOnly=true)		
-	public GameRepresentation retrieveGame(String gameId) {
+	public GameRepresentation loadGame(String gameId) {
 		Game game = gameRepository.gameOfId(new GameId(gameId));
 		
 		if (game == null) {
@@ -83,6 +83,7 @@ public class GameApplicationService {
 		if (game == null) {
 			throw new IllegalArgumentException("Game could not be found.");
 		}
+		
 		return game;
 	}
 	

@@ -50,14 +50,14 @@ public class GameResource {
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setLocation(uriComponents.toUri());
 	    
-	    GameRepresentation gameRepresentation = service.retrieveGame(gameId);	
+	    GameRepresentation gameRepresentation = service.loadGame(gameId);	
 	    
 	    return new ResponseEntity<GameRepresentation>(gameRepresentation, headers, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value="/{gameId}", method = RequestMethod.GET)
 	public ResponseEntity<GameRepresentation> retrieveGame(@PathVariable String gameId) {
-		GameRepresentation gameRepresentation = service.retrieveGame(gameId);
+		GameRepresentation gameRepresentation = service.loadGame(gameId);
 		
 		if (gameRepresentation == null) {
 			return new ResponseEntity<GameRepresentation>(HttpStatus.NOT_FOUND);
@@ -80,7 +80,7 @@ public class GameResource {
 	public ResponseEntity<GameRepresentation> drawCard(@PathVariable String gameId) {
 		service.drawCard(gameId);	
 		
-		GameRepresentation gameRepresentation = service.retrieveGame(gameId);	
+		GameRepresentation gameRepresentation = service.loadGame(gameId);	
 	    
 	    return new ResponseEntity<GameRepresentation>(gameRepresentation, HttpStatus.OK);
 	}
@@ -89,7 +89,7 @@ public class GameResource {
 	public ResponseEntity<GameRepresentation> flipCard(@PathVariable String gameId, @RequestBody FlipCard request) {
 		service.flipCard(gameId, request.getTableauPileId());	
 		
-		GameRepresentation gameRepresentation = service.retrieveGame(gameId);	
+		GameRepresentation gameRepresentation = service.loadGame(gameId);	
 	    
 	    return new ResponseEntity<GameRepresentation>(gameRepresentation, HttpStatus.OK);
 	}
@@ -98,7 +98,7 @@ public class GameResource {
 	public ResponseEntity<GameRepresentation> moveCards(@PathVariable String gameId, @RequestBody MoveCards request) {
 		service.moveCards(gameId, request.getCards(), request.getTableauPileId());
 		
-		GameRepresentation gameRepresentation = service.retrieveGame(gameId);	
+		GameRepresentation gameRepresentation = service.loadGame(gameId);	
 	    
 	    return new ResponseEntity<GameRepresentation>(gameRepresentation, HttpStatus.OK);
 	}
@@ -110,7 +110,7 @@ public class GameResource {
 		
 		service.promoteCard(gameId, card, foundationId);	
 		
-		GameRepresentation gameRepresentation = service.retrieveGame(gameId);	
+		GameRepresentation gameRepresentation = service.loadGame(gameId);	
 	    
 	    return new ResponseEntity<GameRepresentation>(gameRepresentation, HttpStatus.OK);
 	}

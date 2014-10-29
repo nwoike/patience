@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="es-menu">
+  <template> 
+     <link rel="stylesheet" href="es-menu.css">
+     <link rel="stylesheet" href="../../bower_components/bootstrap/css/bootstrap.min.css">
+     <div id="menu">
+       <div class="btn-group">
+         <a id="newGameBtn" class="btn btn-default" role="button" on-click="{{onNewGame}}">
+           <span class="glyphicon glyphicon-plus"></span>
+         </a>
+         <a class="btn btn-default" role="button" on-click="{{onSettings}}">
+           <span class="glyphicon glyphicon-cog"></span>
+         </a>
+       </div>    
+       <content></content>
+     </div>
+  </template>
+  
+  <script>
+    (function () {
+      'use strict';
+	 
+      Polymer({
+         onNewGame: function() {
+              this.fire('new-game');
+          },
+          
+          onSettings: function() {
+            this.fire('settings');   
+          }
+      });
+
+    })();
+  </script>
+</polymer-element>
