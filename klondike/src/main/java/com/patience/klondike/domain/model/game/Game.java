@@ -90,7 +90,7 @@ public class Game extends Entity {
 		}
 		
 		origin.removeTopCard();
-		destination.addCard(card);
+		destination.promoteCard(card);
 		
 		publish(new CardPromoted(gameId, card, origin.pileType()));
 		
@@ -193,7 +193,7 @@ public class Game extends Entity {
 		this.foundations = checkNotNull(foundations, "Foundations must be provided.");
 	}
 	
-	public void setTableauPiles(List<TableauPile> tableauPiles) {
+	private void setTableauPiles(List<TableauPile> tableauPiles) {
 		this.tableauPiles = checkNotNull(tableauPiles, "TableauPiles must be provided.");
 	}	
 	
