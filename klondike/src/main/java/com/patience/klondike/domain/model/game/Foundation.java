@@ -43,7 +43,7 @@ public final class Foundation implements Pile {
 		this.setCardStack(playingCards);
 	}
 
-	public void addCard(PlayingCard playingCard) {
+	public void promoteCard(PlayingCard playingCard) {
 		checkNotNull(playingCard, "Playing card must be provided.");		
 		this.cardStack = cardStack.withAdditionalCard(playingCard);	
 	}

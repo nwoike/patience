@@ -20,7 +20,7 @@ public class FoundationTest {
 	@Test
 	public void addValidFirstCardAce() {
 		Foundation foundation = new Foundation(1);
-		foundation.addCard(PlayingCard.AceOfClubs);
+		foundation.promoteCard(PlayingCard.AceOfClubs);
 
 		assertThat(newArrayList(PlayingCard.AceOfClubs), equalTo(foundation.cards()));
 	}
@@ -28,8 +28,8 @@ public class FoundationTest {
 	@Test
 	public void addValidAdditionalCardMatchesSuit() {
 		Foundation foundation = new Foundation(1);
-		foundation.addCard(PlayingCard.AceOfClubs);
-		foundation.addCard(PlayingCard.TwoOfClubs);
+		foundation.promoteCard(PlayingCard.AceOfClubs);
+		foundation.promoteCard(PlayingCard.TwoOfClubs);
 		
 		assertThat(newArrayList(PlayingCard.AceOfClubs, PlayingCard.TwoOfClubs), equalTo(foundation.cards()));
 	}
@@ -37,6 +37,6 @@ public class FoundationTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void addInvalidFirstCardKing() {
 		Foundation foundation = new Foundation(1);
-		foundation.addCard(PlayingCard.KingOfClubs);
+		foundation.promoteCard(PlayingCard.KingOfClubs);
 	}
 }
