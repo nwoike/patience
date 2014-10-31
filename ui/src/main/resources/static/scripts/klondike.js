@@ -99,7 +99,7 @@
     };
   
     solitaire.Game = function() {
-        this.repository = new solitaire.Repository('http://10.0.1.12:8081/klondike/');
+        this.repository = new solitaire.Repository('http://localhost:8081/klondike/');
         this.gameId = -1;
         this.mostRecentGameData = undefined;
         this.score = 0;
