@@ -59,7 +59,7 @@ public class JdbcGameRepository implements GameRepository {
 
 	private Map<String, String> buildParameterMap(Game game) {
 		Map<String, String> parameters = newHashMap();
-		parameters.put("gameId", game.gameId().id());		
+		parameters.put("gameId", game.gameId().id());	
 		parameters.put("data", convertToJson(game));
 		parameters.put("existingVersion", String.valueOf(game.version()));
 		parameters.put("newVersion", String.valueOf(game.version() + 1));

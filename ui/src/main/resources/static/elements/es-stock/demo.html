@@ -37,6 +37,11 @@
                 var success = stock.next(); 
                 console.log(success);
             }, 1000);
+            
+            setTimeout(function() {
+                stock.setAttribute('passLimitReached', true);
+                stock.render();
+            }, 2000);
 		});
 	</script>
 </body>

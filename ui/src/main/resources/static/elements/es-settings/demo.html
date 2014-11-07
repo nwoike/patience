@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>es-settings demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+ 
+  <link rel="stylesheet" href="../../bower_components/bootstrap/css/bootstrap.min.css">
+ 
+  <script src="../../bower_components/platform/platform.js"></script>
+  <script src="../../bower_components/jquery/jquery.min.js"></script>
+  <script src="../../bower_components/bootstrap/js/bootstrap.min.js"></script>
+    
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="es-settings.html">  
+  
+</head>
+
+<body unresolved>
+    <es-settings title="Game Settings"></es-settings>
+
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			var prompt = document.querySelector('es-settings');
+            
+            prompt.show({ "drawCount": "Three", "passCount": "One"});
+            
+            prompt.addEventListener('confirm', function(event) {
+                setTimeout(function() {
+                    prompt.show();
+                }, 1000);
+                
+                console.log('Prompt was confirmed.', event.detail.drawCount, event.detail.passCount);
+            });
+            
+            prompt.addEventListener('dismiss', function() {
+                console.log('Prompt was dismissed.');
+            });
+		});
+	</script>
+</body>
+
+</html>

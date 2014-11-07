@@ -10,9 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.klondike.application.representation.GameRepresentation;
 import com.patience.klondike.application.representation.PlayingCardRepresentation;
+import com.patience.klondike.domain.model.game.DrawCount;
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.GameId;
 import com.patience.klondike.domain.model.game.GameRepository;
+import com.patience.klondike.domain.model.game.PassCount;
+import com.patience.klondike.domain.model.game.Settings;
 import com.patience.klondike.domain.service.game.WinChecker;
 
 @Transactional
@@ -22,15 +25,15 @@ public class GameApplicationService {
 
 	private WinChecker winChecker;
 	
-	public GameApplicationService(GameRepository gameRepository, WinChecker winnableChecker) {
+	public GameApplicationService(GameRepository gameRepository, WinChecker winChecker) {
 		this.gameRepository = checkNotNull(gameRepository, "Game Repository must be provided.");
-		this.winChecker = checkNotNull(winnableChecker, "Winnable checker must be provided.");		
+		this.winChecker = checkNotNull(winChecker, "Win checker must be provided.");		
 	}
 	
-	public String startGame() {
+	public String startGame(String drawCount, String passCount) {
 		GameId gameId = gameRepository.nextIdentity();
-		
-		Game game = new Game(gameId);
+		Settings settings = new Settings(DrawCount.valueOf(drawCount), PassCount.valueOf(passCount));
+		Game game = new Game(gameId, settings);
 		gameRepository.save(game);
 		
 		return gameId.toString();
@@ -44,14 +47,14 @@ public class GameApplicationService {
 			return null;
 		}
 		
-		final boolean won = winChecker.isWinnable(game);
+		final boolean won = game.isWinnable(winChecker);
 		
 		return new GameRepresentation(game, won);
 	}
 	
-	public void drawCard(String gameId) {
+	public void drawCards(String gameId) {
 		Game game = gameOf(gameId);		
-		game.drawCard();
+		game.drawCards();
 		
 		gameRepository.save(game);
 	}

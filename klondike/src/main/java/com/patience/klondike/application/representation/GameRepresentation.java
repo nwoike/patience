@@ -12,6 +12,8 @@ public class GameRepresentation {
 
 	private final String gameId;
 	
+	private final SettingsRepresentation settings;
+		
 	private final StockRepresentation stock;
 	
 	private final WasteRepresentation waste;
@@ -20,13 +22,14 @@ public class GameRepresentation {
 	
 	private final Map<String, TableauPileRepresentation> tableau = newHashMap();
 	
-	private final boolean won;
+	private final boolean winnable;
 	
-	public GameRepresentation(Game game, boolean won) {
+	public GameRepresentation(Game game, boolean winnable) {
 		this.gameId = game.gameId().id();
+		this.settings = new SettingsRepresentation(game.settings());		
 		this.stock = new StockRepresentation(game.stock());
 		this.waste = new WasteRepresentation(game.waste());
-		this.won = won;
+		this.winnable = winnable;
 		
 		for (TableauPile tableauPile : game.tableauPiles()) {
 			this.tableau.put(String.valueOf(tableauPile.tableauPileId()), new TableauPileRepresentation(tableauPile));
@@ -41,6 +44,10 @@ public class GameRepresentation {
 		return gameId;
 	}
 	
+	public SettingsRepresentation getSettings() {
+		return settings;
+	}
+		
 	public StockRepresentation getStock() {
 		return stock;
 	}
@@ -57,7 +64,7 @@ public class GameRepresentation {
 		return tableau;
 	}
 	
-	public boolean isWon() {
-		return won;
+	public boolean isWinnable() {
+		return winnable;
 	}
 }

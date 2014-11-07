@@ -23,8 +23,7 @@ public class GameApplicationServiceTest {
 	
 	@Test
 	public void createGame() {
-		String newGameId = gameApplicationService.startGame();
+		String newGameId = gameApplicationService.startGame("One", "Unlimited");
 		assertThat(newGameId, equalTo("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb"));
 	}
-
 }

@@ -13,6 +13,7 @@ import com.google.common.eventbus.Subscribe;
 import com.patience.domain.model.event.DomainEvent;
 import com.patience.domain.model.event.DomainEventPublisher;
 import com.patience.domain.model.event.DomainEventSubscriber;
+import com.patience.klondike.application.IllegalMoveException;
 
 public class GameTest {
 
@@ -21,7 +22,7 @@ public class GameTest {
 	@Before
 	public void setup() {
 		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
-		game = new Game(gameId);
+		game = new Game(gameId, new Settings(DrawCount.One, PassCount.Unlimited));
 		
 		assertThat(game.gameId(), equalTo(gameId));
 	}
@@ -59,26 +60,143 @@ public class GameTest {
 	
 	@Test
 	public void drawCard() {
-		game.drawCard();
+		game.drawCards();
 		
 		assertThat(23, equalTo(game.stock().cardCount()));
 		assertThat(1, equalTo(game.waste().cardCount()));
+	}
+		
+	@Test
+	public void drawCardMultipleDraw() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.Three, PassCount.One));
+		
+		game.drawCards();
+		
+		assertThat(21, equalTo(game.stock().cardCount()));
+		assertThat(3, equalTo(game.waste().cardCount()));
+		
+		game.drawCards();
+		
+		assertThat(18, equalTo(game.stock().cardCount()));
+		assertThat(6, equalTo(game.waste().cardCount()));
 	}
 	
 	@Test
 	public void wasteRecyclesWhenStockIsEmpty() {
 		for (int i = game.stock().cardCount(); i > 0; i--) {	
-			game.drawCard();
+			game.drawCards();
 		}
 		
-		assertThat(0, equalTo(game.stock().cardCount()));
-		assertThat(24, equalTo(game.waste().cardCount()));
+		assertThat(game.stock().cardCount(), equalTo(0));
+		assertThat(game.waste().cardCount(), equalTo(24));
 		
-		game.drawCard();
+		game.drawCards();
 		
 		assertThat(24, equalTo(game.stock().cardCount()));
 		assertThat(0, equalTo(game.waste().cardCount()));		
 	}
+	
+	@Test
+	public void passLimitMetSingleDrawSinglePass() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.One, PassCount.One));
+		
+		for (int i = 1; i <= 24; i++) {	
+			game.drawCards();
+		}
+		
+		assertThat(game.stock().isEmpty(), equalTo(true));
+	}
+	
+	@Test(expected=IllegalMoveException.class)
+	public void passLimitMetSingleDrawSinglePassRecycle() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.One, PassCount.One));
+		
+		for (int i = 1; i <= 25; i++) {	
+			game.drawCards();
+		}
+	}
+	
+	@Test
+	public void passLimitMetSingleDrawThreePasses() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.One, PassCount.Three));
+		
+		for (int i = 1; i <= 74; i++) {	
+			game.drawCards();
+		}
+		
+		assertThat(game.stock().isEmpty(), equalTo(true));
+	}
+	
+	@Test(expected=IllegalMoveException.class)
+	public void passLimitMetSingleDrawThreePassesRecycle() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.One, PassCount.Three));
+		
+		for (int i = 1; i <= 75; i++) {	
+			game.drawCards();
+		}
+	}
+	
+	@Test
+	public void passLimitMetThreeDrawOnePasses() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.Three, PassCount.One));
+		
+		for (int i = 1; i <= 8; i++) {	
+			game.drawCards();
+		}
+		
+		assertThat(game.stock().isEmpty(), equalTo(true));
+	}
+	
+	@Test(expected=IllegalMoveException.class)
+	public void passLimitMetThreeDrawOnePassesRecycle() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.Three, PassCount.One));
+		
+		for (int i = 1; i <= 9; i++) {	
+			game.drawCards();
+		}
+	}
+	
+	@Test
+	public void passLimitMetThreeDrawThreePasses() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.Three, PassCount.Three));
+		
+		for (int i = 1; i <= 26; i++) {	
+			game.drawCards();
+		}
+		
+		assertThat(game.stock().isEmpty(), equalTo(true));
+	}
+	
+	@Test(expected=IllegalMoveException.class)
+	public void passLimitMetThreeDrawThreePassesRecycle() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.Three, PassCount.Three));
+		
+		for (int i = 1; i <= 27; i++) {	
+			game.drawCards();
+		}
+	}
+	
+	@Test
+	public void passLimitMetThreeDrawUnlimitedPasses() {
+		GameId gameId = new GameId("d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb");
+		Game game = new Game(gameId, new Settings(DrawCount.Three, PassCount.Unlimited));
+		
+		for (int i = 1; i <= 100; i++) {	
+			game.drawCards();
+		}
+		
+		assertThat(game.stock().isEmpty(), equalTo(false));
+	}
+	
 	
 	@Test
 	public void stockRecycledEventFires() {
@@ -92,10 +210,10 @@ public class GameTest {
         });
 		
 		for (int i = game.stock().cardCount(); i >= 0; i--) {	
-			game.drawCard();
+			game.drawCards();
 		}
 		
-		assertThat(1, equalTo(events.size()));
+		assertThat(events.size(), equalTo(1));
 
 		StockRecycled stockRecycled = (StockRecycled) events.get(0);
 		assertThat(game.gameId(), equalTo(stockRecycled.gameId()));

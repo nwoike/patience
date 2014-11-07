@@ -15,6 +15,8 @@ public class Game extends Entity {
 
 	private GameId gameId;
 
+	private Settings settings;
+	
 	private Stock stock;
 	
 	private Waste waste;
@@ -22,40 +24,54 @@ public class Game extends Entity {
 	private List<Foundation> foundations = newArrayList();
 	
 	private List<TableauPile> tableauPiles = newArrayList();
-	
-	public Game(GameId gameId) {
+
+	public Game(GameId gameId, Settings settings) {
 		this.setGameId(gameId);
+		this.setSettings(settings);
 		
 		new GameInitializer().setupNewGame(gameId);
 		
-		publish(new GameCreated(gameId));
+		publish(new GameCreated(gameId, settings));
 	}
 
-	public Game(GameId gameId, Stock stock, Waste waste,
+	public Game(GameId gameId, Settings settings, Stock stock, Waste waste,
 			List<Foundation> foundations, List<TableauPile> tableauPiles) {
 		this.setGameId(gameId);
+		this.setSettings(settings);
 		this.setStock(stock);
 		this.setWaste(waste);
 		this.setFoundations(foundations);
 		this.setTableauPiles(tableauPiles);
 	}
 	
-	public void drawCard() {	
-		PlayingCard card = stock.drawCard();
-		
-		if (card != null) {
-			waste.addCard(card);
-			return;
-		} 
-
-		// Do not try to recycle an empty waste
-		if (waste.isEmpty()) {
+	public void drawCards() {	
+		if (stock.isEmpty() && attemptRecycle()) {
 			return;
 		}
+		
+		for (int i=0; i < settings.drawCount().asInt(); i++) {
+			PlayingCard card = stock.drawCard();
 			
+			// Sometimes the end of the stock may not reach the full draw count 
+			if (card == null) {
+				return;
+			}
+			
+			waste.addCard(card);			 
+		}		
+	}
+
+	private boolean attemptRecycle() {
+		// Do not try to recycle an empty waste
+		if (waste.isEmpty()) {
+			return false;
+		}
+		
 		stock.recycle(waste);
 		
 		publish(new StockRecycled(gameId));
+		
+		return true;
 	}
 
 	public void moveCards(List<PlayingCard> cards, int destinationTableauPileId) {
@@ -160,6 +176,10 @@ public class Game extends Entity {
 		return gameId;
 	}
 	
+	public Settings settings() {
+		return settings;
+	}
+	
 	public Stock stock() {
 		return stock;
 	}
@@ -178,7 +198,10 @@ public class Game extends Entity {
 	
 	private void setGameId(GameId gameId) {
 		this.gameId = checkNotNull(gameId, "GameId must be provided.");	
-		this.gameId = gameId;
+	}
+	
+	private void setSettings(Settings settings) {
+		this.settings = checkNotNull(settings, "Settings must be provided.");
 	}
 	
 	private void setStock(Stock stock) {
@@ -196,7 +219,7 @@ public class Game extends Entity {
 	private void setTableauPiles(List<TableauPile> tableauPiles) {
 		this.tableauPiles = checkNotNull(tableauPiles, "TableauPiles must be provided.");
 	}	
-	
+		
 	private class GameInitializer {
 		
 		private void setupNewGame(GameId gameId) {
@@ -220,7 +243,7 @@ public class Game extends Entity {
 				cards.add(deck.drawCard());
 			}
 			
-			stock = new Stock(cards);		
+			stock = new Stock(cards, settings.passCount());		
 		}
 
 		private void initializeTableau(Deck deck) {

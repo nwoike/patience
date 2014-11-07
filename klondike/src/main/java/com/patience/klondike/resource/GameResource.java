@@ -20,6 +20,7 @@ import com.patience.klondike.application.IllegalMoveException;
 import com.patience.klondike.application.representation.GameRepresentation;
 import com.patience.klondike.application.representation.GameScoreRepresentation;
 import com.patience.klondike.application.representation.PlayingCardRepresentation;
+import com.patience.klondike.resource.request.CreateGame;
 import com.patience.klondike.resource.request.FlipCard;
 import com.patience.klondike.resource.request.MoveCards;
 import com.patience.klondike.resource.request.PromoteCard;
@@ -43,8 +44,12 @@ public class GameResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<GameRepresentation> createGame(UriComponentsBuilder builder) {
-		String gameId = service.startGame();
+	public ResponseEntity<GameRepresentation> createGame(@RequestBody(required=false) CreateGame createGame, UriComponentsBuilder builder) {
+		if (createGame == null) {
+			createGame = new CreateGame();
+		}
+		
+		String gameId = service.startGame(createGame.getDrawCount(), createGame.getPassCount());
 
 		UriComponents uriComponents = builder.path("/klondike/{id}").buildAndExpand(gameId);
 		HttpHeaders headers = new HttpHeaders();
@@ -78,7 +83,7 @@ public class GameResource {
 	
 	@RequestMapping(value="/{gameId}/draw", method = RequestMethod.POST)
 	public ResponseEntity<GameRepresentation> drawCard(@PathVariable String gameId) {
-		service.drawCard(gameId);	
+		service.drawCards(gameId);	
 		
 		GameRepresentation gameRepresentation = service.loadGame(gameId);	
 	    

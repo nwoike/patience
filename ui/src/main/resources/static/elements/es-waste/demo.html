@@ -37,7 +37,7 @@
 			<es-card rank="Queen" suit="Clubs"></es-card>		
 		</es-waste>	
 
-		<es-waste spacing="25" visibleCount="3">
+		<es-waste id="removal" spacing="25" visibleCount="3">
 			<es-card rank="Ace" suit="Clubs"></es-card>
 			<es-card rank="King" suit="Hearts"></es-card>
 			<es-card rank="Queen" suit="Clubs"></es-card>	
@@ -64,6 +64,9 @@
 			
 			document.querySelector('es-waste:first-child').addCard(card);
 			document.querySelector('es-waste:last-of-type').addCard(card);
+            
+            var waste = document.querySelector('es-waste#removal');
+            waste.removeChild(waste.topCard());
 		});
 	</script>
 </body>

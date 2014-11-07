@@ -13,10 +13,13 @@
   
     solitaire.Repository.prototype = {
       
-      createGame: function() {
+      createGame: function(settings) {
           return $.ajax({
             url: this.rootUrl,
-            type: "POST"
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(settings)
           });
       },
       
@@ -103,10 +106,13 @@
         this.gameId = -1;
         this.mostRecentGameData = undefined;
         this.score = 0;
+        this.passLimitReached = false;
+        this.settings = { "drawCount": "One", "passCount": "Unlimited" };
 		this.spinner = document.querySelector('es-spinner');
 		this.scorer = document.querySelector('es-score');
         this.stock = document.querySelector('es-stock');
         this.waste = document.querySelector('es-waste');
+        this.wasteMoveCount = 0;
         this.foundations = {};
         this.tableau = {};
  
@@ -138,12 +144,13 @@
 			this.toggleLoading();
             this.score = 0;
              
-            this.repository.createGame().done(function(gameData) {			  
+            this.repository.createGame(this.settings).done(function(gameData) {			  
                 this.mostRecentGameData = gameData;                
                 this.gameId = gameData.gameId;
+                this.passLimitReached = false;
                 this.render(gameData);   
                 this.scorer.updateScore(0);
-				
+                
                 window.location.hash = '/klondike/' + this.gameId;
             }.bind(this)).always(this.toggleLoading.bind(this));    
         },
@@ -154,6 +161,8 @@
             this.repository.loadGame(gameId).done(function(gameData) {
                 this.mostRecentGameData = gameData;             
                 this.gameId = gameData.gameId;
+                this.settings = gameData.settings;
+                this.passLimitReached = gameData.stock.passLimitReached;
                 this.render(gameData);  
                 this.updateScore();
                 
@@ -170,18 +179,24 @@
         },
         
         drawCard: function() {
-            this.toggleLoading();
-            
             if (this.stock.isEmpty() && this.waste.isEmpty()) {
                 return;
             }
+
+            if (this.passLimitReached) {
+                return;   
+            }
+            
+            this.toggleLoading();
             
             this.repository.drawCard(this.gameId).done($.proxy(function(gameData) {
-                this.mostRecentGameData = gameData;        
+                this.mostRecentGameData = gameData; 
+                this.passLimitReached = gameData.stock.passLimitReached;
+                this.wasteMoveCount = 0;
                 this.render(gameData);               
-            }, this)).fail(function() {
-                 this.render();
-             }.bind(this)).always(this.toggleLoading.bind(this));
+            }, this)).fail(function(response) {
+                this.render();
+            }.bind(this)).always(this.toggleLoading.bind(this));
         },
 
         moveCards: function(cards, tableauPileId) {
@@ -247,7 +262,9 @@
             
             // Stock
             this.stock.setAttribute('size', gameData.stock.cardCount);
-
+            this.stock.setAttribute('passLimitReached', this.passLimitReached);
+            this.stock.render();
+                        
             // Waste
             var wasteData = gameData.waste;
             var wasteCards = [];
@@ -259,6 +276,8 @@
             }
 			
             this.waste.addCards(wasteCards);
+            this.waste.setAttribute('visibleCount', (this.settings.drawCount == "One" ? 1 : 3) - this.wasteMoveCount);   
+            this.waste.render();
             
             // Foundations
 			for (var foundationId in this.foundations) {
@@ -296,7 +315,7 @@
                 tableauPile.addCards(tableauCards, true);
             }
           
-			if (gameData.won) {   
+			if (gameData.winnable) {   
 				this.animateWin();
                 this.updateScore();
 				return;
@@ -368,6 +387,11 @@
             var prompt = document.querySelector('es-prompt');
             prompt.show();
 		},
+        
+        showSettings: function() {
+            var settings = document.querySelector('es-settings');
+            settings.show(this.settings);
+        },
 		
         initialize: function() {
           var game = this;
@@ -382,8 +406,12 @@
                       if (!this.data("ui-draggable").options) return;
 
                       var revertDuration = this.data("ui-draggable").options.revertDuration;
-
+                                            
                       if (!isValid) {
+                          if ($(this).parents('es-waste').length > 0) {
+                              game.wasteMoveCount--;
+                          }
+                          
                           // Fixes original element flashing during revert animation due to custom helper usage 
                           $(this).nextAll('es-card').addBack().delay(revertDuration).show(0);
                           return "revert";
@@ -392,7 +420,11 @@
                   containment: "window",
                   distance: 10,
                   scroll: false,
-                  start: function() {      
+                  start: function() {
+                      if ($(this).parents('es-waste').length > 0) {
+                          game.wasteMoveCount++;
+                      }
+                      
                       $(this).nextAll('es-card').addBack().hide();
                   },
                   helper: function() {
@@ -480,7 +512,7 @@
 
               var dropOffset = $(this).offset();
               var dragOffset = helper.offset();
-
+              
               var callback = $.proxy(function(cards, helper) {	
                   this.addCard ? this.addCard(cards[0]) : this.addCards(cards, helper);					
                                   
@@ -522,9 +554,9 @@
         var game = new solitaire.Game();
 		var hash = window.location.hash.replace('#','');
 		
-		var regex = /^\/klondike\/(\w+)$/;
+		var regex = /^\/klondike\/((\w+)-(\w+)-(\w+)-(\w+)-(\w+))$/;
 		var match = regex.exec(hash);
-				
+        
 		if (match) {
 			game.loadGame(match[1]);
 		
@@ -544,6 +576,17 @@
         menu.addEventListener('new-game', function() {
             game.showMenu(); 
         });
+        
+        menu.addEventListener('settings', function() {
+            game.showSettings();    
+        });
+        
+        var settings = document.querySelector('es-settings');
+        
+        settings.addEventListener('confirm', function() {
+            game.settings = event.detail;
+        });
+        
 	});
   });
   

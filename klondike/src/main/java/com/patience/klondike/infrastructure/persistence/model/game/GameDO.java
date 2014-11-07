@@ -7,11 +7,14 @@ import java.util.List;
 import com.patience.klondike.domain.model.game.Foundation;
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.GameId;
+import com.patience.klondike.domain.model.game.Settings;
 import com.patience.klondike.domain.model.game.TableauPile;
 
 public class GameDO {
 
 	private String gameId;
+	
+	private SettingsDO settingsDO;
 	
 	private StockDO stockDO;
 	
@@ -25,8 +28,11 @@ public class GameDO {
 	}
 	
 	public GameDO(Game game) {
+		Settings settings = game.settings();
+				
 		this.gameId = game.gameId().id();
-		this.stockDO = new StockDO(game.stock());
+		this.settingsDO = new SettingsDO(settings);
+		this.stockDO = new StockDO(game.stock(), settings.passCount());
 		this.wasteDO = new WasteDO(game.waste());
 		
 		for (TableauPile tableauPile : game.tableauPiles()) {
@@ -46,6 +52,14 @@ public class GameDO {
 		this.gameId = gameId;
 	}
 	
+	public void setSettingsDO(SettingsDO settingsDO) {
+		this.settingsDO = settingsDO;
+	}
+	
+	public SettingsDO getSettingsDO() {
+		return settingsDO;
+	}
+		
 	public StockDO getStock() {
 		return stockDO;
 	}
@@ -91,11 +105,10 @@ public class GameDO {
 		}
 		
 		return new Game(new GameId(gameId),
+			settingsDO.toSettings(),
 			stockDO.toStock(),
 			wasteDO.toWaste(),
 			foundations,
 			tableauPiles);
 	}
-	
-
 }

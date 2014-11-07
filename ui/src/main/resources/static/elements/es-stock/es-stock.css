@@ -13,3 +13,7 @@ div.stock {
 div.stock.empty {
     background-image: url("/images/card_back_shadow_2.png");
 }
+
+div.stock.passLimitReached {
+    background-image: url("/images/card_back_shadow_2_x.png");
+}

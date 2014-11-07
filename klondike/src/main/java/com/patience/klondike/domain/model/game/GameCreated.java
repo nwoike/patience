@@ -9,12 +9,15 @@ public class GameCreated implements DomainEvent {
 
 	private final GameId gameId;
 
+	private final Settings settings;
+	
 	private final DateTime occurredOn;
 	
 	private int eventVersion;
 	
-	public GameCreated(GameId gameId) {
+	public GameCreated(GameId gameId, Settings settings) {
 		this.gameId = gameId;
+		this.settings = settings;
 		this.occurredOn = DateTime.now();
 		this.eventVersion = 1;
 	}
@@ -22,6 +25,11 @@ public class GameCreated implements DomainEvent {
 	@JsonProperty
 	public GameId gameId() {
 		return gameId;
+	}
+	
+	@JsonProperty
+	public Settings getSettings() {
+		return settings;
 	}
 	
 	@JsonProperty
