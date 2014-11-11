@@ -25,11 +25,11 @@ public class GameScoreDO {
 		this.gameId = gameId;
 	}
 	
-	public void setTrackedMovesDO(TrackedMovesDO trackedMoves) {
+	public void setTrackedMoves(TrackedMovesDO trackedMoves) {
 		this.trackedMoves = trackedMoves;
 	}
 	
-	public TrackedMovesDO getTrackedMovesDO() {
+	public TrackedMovesDO getTrackedMoves() {
 		return trackedMoves;
 	}
 	

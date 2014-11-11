@@ -52,11 +52,11 @@ public class GameDO {
 		this.gameId = gameId;
 	}
 	
-	public void setSettingsDO(SettingsDO settingsDO) {
+	public void setSettings(SettingsDO settingsDO) {
 		this.settingsDO = settingsDO;
 	}
 	
-	public SettingsDO getSettingsDO() {
+	public SettingsDO getSettings() {
 		return settingsDO;
 	}
 		
