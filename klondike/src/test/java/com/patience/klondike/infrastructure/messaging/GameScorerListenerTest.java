@@ -15,7 +15,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.domain.model.event.DomainEventSerializer;
 import com.patience.klondike.application.GameScoreApplicationService;
@@ -33,7 +32,7 @@ public class GameScorerListenerTest {
 	
 	GameScoreApplicationService mockScoreService;
 	
-	DomainEventSerializer domainEventSerializer = new DomainEventSerializer(new ObjectMapper());
+	DomainEventSerializer domainEventSerializer = new DomainEventSerializer();
 	
 	@Before
 	public void setup() {

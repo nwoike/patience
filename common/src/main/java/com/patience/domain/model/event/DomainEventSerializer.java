@@ -1,16 +1,25 @@
 package com.patience.domain.model.event;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
+/**
+ * Serializes domain events by Field only.
+ */
 public class DomainEventSerializer {
 
 	private ObjectMapper objectMapper;
 
-	public DomainEventSerializer(ObjectMapper objectMapper) {
-		this.objectMapper = checkNotNull(objectMapper, "ObjectMapper must be provided");		
+	public DomainEventSerializer() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JodaModule());
+		objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
+		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		
+		this.objectMapper = objectMapper;		
 	}
 	
 	public String serialize(DomainEvent event) {

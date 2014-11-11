@@ -2,7 +2,6 @@ package com.patience.klondike.domain.model.game;
 
 import org.joda.time.DateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patience.domain.model.event.DomainEvent;
 
 public class GameCreated implements DomainEvent {
@@ -13,6 +12,8 @@ public class GameCreated implements DomainEvent {
 	
 	private final DateTime occurredOn;
 	
+	private String eventType = "patience.klondike.GameCreated";
+	
 	private int eventVersion;
 	
 	public GameCreated(GameId gameId, Settings settings) {
@@ -22,29 +23,25 @@ public class GameCreated implements DomainEvent {
 		this.eventVersion = 1;
 	}
 	
-	@JsonProperty
 	public GameId gameId() {
 		return gameId;
 	}
 	
-	@JsonProperty
 	public Settings getSettings() {
 		return settings;
 	}
 	
-	@JsonProperty
 	public DateTime occurredOn() {
 		return occurredOn;
 	}
 	
 	@Override
-	@JsonProperty
 	public int eventVersion() {
 		return eventVersion;
 	}
 	
-	@JsonProperty
+	@Override
 	public String eventType() {
-		return "patience.klondike.GameCreated";
+		return eventType;
 	}
 }
