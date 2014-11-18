@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.patience.common.domain.model.cardstack.CardStack;
 import com.patience.common.domain.model.cardstack.MatchingSuit;
 import com.patience.common.domain.model.cardstack.style.CardStackingStyle;
 

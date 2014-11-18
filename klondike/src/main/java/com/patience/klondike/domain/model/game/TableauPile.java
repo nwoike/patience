@@ -6,12 +6,12 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
-import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.card.Rank;
 import com.patience.common.domain.model.cardstack.AlternatingSuitColor;
 import com.patience.common.domain.model.cardstack.AnyOrder;
 import com.patience.common.domain.model.cardstack.BottomRank;
+import com.patience.common.domain.model.cardstack.CardStack;
 import com.patience.common.domain.model.cardstack.DecreasingRank;
 import com.patience.common.domain.model.cardstack.EmptyStack;
 import com.patience.common.domain.model.cardstack.SequentialRank;

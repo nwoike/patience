@@ -1,6 +1,6 @@
 package com.patience.common.domain.model.cardstack.style;
 
-import com.patience.common.domain.model.card.CardStack;
+import com.patience.common.domain.model.cardstack.CardStack;
 
 public class AndCardStackingStyle extends AbstractCardStackingStyle {
 

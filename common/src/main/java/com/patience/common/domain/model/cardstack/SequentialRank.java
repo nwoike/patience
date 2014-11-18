@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.cardstack.style.AbstractCardStackingStyle;
 
@@ -27,7 +26,7 @@ public class SequentialRank extends AbstractCardStackingStyle {
 			for (int i = 1; i < playingCards.size(); i++) {
 				PlayingCard currentCard = playingCards.get(i);
 				
-				if (currentCard.rank().follows(previousCard.rank())) {
+				if (!previousCard.rank().follows(currentCard.rank())) {
 					return false;
 				}
 				
@@ -40,7 +39,7 @@ public class SequentialRank extends AbstractCardStackingStyle {
 			for (int i = 1; i < playingCards.size(); i++) {
 				PlayingCard currentCard = playingCards.get(i);
 				
-				if (previousCard.rank().follows(currentCard.rank())) {
+				if (!previousCard.rank().precedes(currentCard.rank())) {
 					return false;
 				}
 				

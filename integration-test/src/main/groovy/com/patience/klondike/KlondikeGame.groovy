@@ -1,10 +1,19 @@
 package com.patience.klondike;
 
+import com.patience.common.domain.model.card.PlayingCard;
+import com.patience.common.domain.model.card.Rank;
+import com.patience.common.domain.model.card.Suit;
+import com.patience.common.domain.model.cardstack.CardStack
+import com.patience.klondike.solver.KlondikeGameData
+import com.patience.klondike.solver.NaiveKlondikeAI
+import com.patience.klondike.solver.Move;
+import com.patience.klondike.solver.TableauPileData
+
 import geb.Page;
 
 public class KlondikeGame extends Page {
 
-	 static url = "http://localhost:8080/#/klondike/b5d2fa8c-fe49-4628-8e32-611a524d7523"
+	 static url = "#/klondike"
 	 static at = { waitFor { $("es-card").size() > 0 } }		
 	  
 	 static content = {
@@ -79,5 +88,41 @@ public class KlondikeGame extends Page {
 		 }
 		 
 		 $("es-card[rank=$rank][suit=$suit]")
+	 }
+	 
+	 def isWon() {
+	 	$("es-tableau-pile es-card").size() + $("es-foundation es-card").size() == 52
+	 }
+	 
+	 def gameData() {
+		 if (isWon()) return null;
+		 
+		 def foundationCards = []
+		 
+		 $('es-foundation es-card:last-child').each { card ->
+			 foundationCards.add(cardFromEl(card));
+		 }
+		 
+		 def tableauPileData = []
+		 
+		 $('es-tableau-pile').eachWithIndex { el, idx ->
+			 def unflippedCardCount = el.find('es-card-back').size()
+			 def cards = []
+			 
+			 el.find('es-card').each { card ->
+				 cards.add(cardFromEl(card))
+			 }
+ 
+			 tableauPileData.add(new TableauPileData(new CardStack(cards), unflippedCardCount))
+		 }
+					 
+		 def wasteEl = $('es-waste es-card:last-child')
+		 def wasteCard = !wasteEl ? null : cardFromEl(wasteEl)
+		 
+		 return new KlondikeGameData(foundationCards, tableauPileData, wasteCard)
+	 }
+	 
+	 def cardFromEl(el) {		 
+		 PlayingCard.of(Rank.valueOf(el.@rank), Suit.valueOf(el.@suit))
 	 }
 }

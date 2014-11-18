@@ -2,7 +2,6 @@ package com.patience.common.domain.model.cardstack;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.card.Suit;
 import com.patience.common.domain.model.cardstack.style.AbstractCardStackingStyle;

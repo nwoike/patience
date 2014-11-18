@@ -7,6 +7,8 @@ driver = {
 	driver	
 }
 
+baseUrl = "http://localhost:8080/"
+
 waiting {
 	timeout = 5
 	retryInterval = 0.1

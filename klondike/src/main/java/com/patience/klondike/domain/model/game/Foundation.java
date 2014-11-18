@@ -6,11 +6,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.patience.common.domain.model.card.CardStack;
 import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.card.Rank;
 import com.patience.common.domain.model.card.Suit;
 import com.patience.common.domain.model.cardstack.BottomRank;
+import com.patience.common.domain.model.cardstack.CardStack;
 import com.patience.common.domain.model.cardstack.EmptyStack;
 import com.patience.common.domain.model.cardstack.IncreasingRank;
 import com.patience.common.domain.model.cardstack.MatchingSuit;

@@ -1,161 +1,54 @@
 package com.patience.klondike
 
+import com.patience.common.domain.model.card.PlayingCard;
+import geb.Browser
 import geb.spock.GebSpec
-import org.openqa.selenium.Dimension
+
+import com.patience.common.domain.model.card.PlayingCard
+import com.patience.klondike.solver.KlondikeAI;
+import com.patience.klondike.solver.Move
+import com.patience.klondike.solver.MoveHandler
+import com.patience.klondike.solver.NaiveKlondikeAI
 
 class KlondikeSpec extends GebSpec {
 	
-	def "Can win predetermined Klondike game"() {
+	KlondikeAI solver = new NaiveKlondikeAI()
+	
+	def "Can play a game of Klondike Solitaire"() {
 		when:
-		to KlondikeGame
-
+		to KlondikeGame, "b5d2fa8c-fe49-4628-8e32-611a524d7523"
+	
 		then:
-		at KlondikeGame
+		at KlondikeGame	
 		
-		and:
-		promoteCard('Ace', 'Diamonds')				
-		flipCard(2)
-		drawCard()
-		moveCards('Nine', 'Hearts', 2)
-		drawCard()
-		drawCard()
-		moveCards('Four', 'Clubs', 3)
-		moveCards('Three', 'Diamonds', 3)
-		flipCard(6)
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard() 
-		moveCards('Ten', 'Hearts', 5)
-		drawCard()
-		moveCards('Three', 'Clubs', 7)
-		drawCard()
-		moveCards('King', 'Clubs', 1)
-		drawCard()
-		moveCards('Two', 'Clubs', 3)
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		promoteCard('Ace', 'Hearts')
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		moveCards('Two', 'Hearts', 7)
-		promoteCard('Two', 'Hearts')
-		drawCard()
-		drawCard()
-		promoteCard('Ace', 'Spades')
-		promoteCard('Two', 'Spades')
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		drawCard()
-		moveCards('Queen', 'Hearts', 1)
-		moveCards('Jack', 'Spades', 1)
-		flipCard(5)
-		moveCards('Seven', 'Clubs', 5)
-		flipCard(4)
-		drawCard()
-		promoteCard('Three', 'Hearts')
-		drawCard()
-		moveCards('Nine', 'Clubs', 1)
-		moveCards('Eight', 'Hearts', 1)
-		flipCard(5)
-		promoteCard('Two', 'Diamonds')
-		flipCard(5)
-		moveCards('Nine', 'Diamonds', 5)
-		flipCard(6)
-		moveCards('Six', 'Diamonds', 1)
-		flipCard(6)
-		moveCards('Four', 'Diamonds', 6)
-		moveCards('Five', 'Clubs', 1)
-		flipCard(6)
-		flipCard(7)
-		moveCards('Eight', 'Spades', 5)
-		flipCard(7)
-		moveCards('Seven', 'Diamonds', 5)
-		flipCard(4)
-		promoteCard('Three', 'Spades')
-		flipCard(7)
-		moveCards('Six', 'Clubs', 5)
-		flipCard(7)
-		moveCards('Five', 'Hearts', 5)
-		flipCard(3)
-		drawCard()
-		promoteCard('Four', 'Spades')
-		drawCard()
-		promoteCard('Four', 'Hearts')
-		drawCard()
-		drawCard() 
-		drawCard()
-		drawCard()
-		moveCards('Eight', 'Diamonds', 6)
-		drawCard()
-		drawCard()
-		drawCard()
-		moveCards('Queen', 'Clubs', 4)
-		drawCard()
-		moveCards('Queen', 'Diamonds', 3)
-		drawCard()
-		drawCard()
-		moveCards('Five', 'Spades', 7)
-		drawCard()
-		moveCards('Jack', 'Clubs', 3)
-		drawCard()
-		drawCard()
-		promoteCard('Five', 'Spades')
-		promoteCard('Six', 'Spades')
-		drawCard();
-		moveCards('Jack', 'Hearts', 4)		
-		moveCards('Ten', 'Clubs', 4)
-		flipCard(5)
-		promoteCard('Ace', 'Clubs')
-		moveCards('King', 'Diamonds', 5)
-		flipCard(4)
-		moveCards('Seven', 'Spades', 6)
-		moveCards('Six', 'Hearts', 6)
-		flipCard(7)
-		moveCards('King', 'Spades', 4)
-		flipCard(3)
-		moveCards('Ten', 'Spades', 7)
-		moveCards('King', 'Hearts', 2)
-		moveCards('Queen', 'Spades', 2)
-		moveCards('Jack', 'Diamonds', 2)
-		flipCard(7)
-		drawCard()
-		moveCards('Seven', 'Hearts', 7)
-		drawCard()
-		promoteCard('Two', 'Clubs')
-		promoteCard('Three', 'Clubs')
-		promoteCard('Three', 'Diamonds')
-		promoteCard('Four', 'Diamonds')
-		promoteCard('Four', 'Clubs')
-		promoteCard('Five', 'Clubs')
-		promoteCard('Five', 'Hearts')
-		promoteCard('Five', 'Diamonds')
-		promoteCard('Six', 'Diamonds')
-		promoteCard('Six', 'Hearts')
-		promoteCard('Seven', 'Hearts')
-		promoteCard('Seven', 'Spades')
-		promoteCard('Six', 'Clubs')
-		promoteCard('Seven', 'Clubs')
-		promoteCard('Eight', 'Clubs')
-		promoteCard('Seven', 'Diamonds')
-		promoteCard('Eight', 'Diamonds')
-		promoteCard('Eight', 'Spades')
-		promoteCard('Nine', 'Spades')
-		flipCard(6)
+		Move move = solver.bestAvailableMove(gameData())
+			
+		while (!isWon() && move) {
+			move.play(new MoveHandler() {
+				void drawCard() {
+					page.drawCard()
+				}
+				
+				void flipCard(int tableauPileId) {
+					page.flipCard(tableauPileId)
+				}
+				
+				void moveCards(PlayingCard card, int tableauPileId) {
+					page.moveCards(card.rank(), card.suit(), tableauPileId)
+				}
+				
+				void promoteCard(PlayingCard card) {
+					page.promoteCard(card.rank(), card.suit())
+				}
+			})
+		
+			move = solver.bestAvailableMove(gameData())
+		}
 		
 		then:
 		foundationFull()
 
 		and:
 		wasteEmpty()
-	}
+	}	
 }

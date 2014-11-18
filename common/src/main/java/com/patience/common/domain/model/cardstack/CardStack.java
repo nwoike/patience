@@ -1,4 +1,4 @@
-package com.patience.common.domain.model.card;
+package com.patience.common.domain.model.cardstack;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.collect.Iterators;
+import com.patience.common.domain.model.card.PlayingCard;
 import com.patience.common.domain.model.cardstack.style.CardStackingStyle;
 import com.patience.common.domain.model.cardstack.style.StackingStyleTracker;
 
@@ -52,6 +53,10 @@ public final class CardStack implements Iterable<PlayingCard> {
 		this.cards.addAll(cards);	
 	}
 	
+	public CardStack(PlayingCard playingCard, CardStackingStyle stackingStyle) {
+		this(newArrayList(playingCard), stackingStyle);
+	}
+
 	public CardStack withAdditionalCard(PlayingCard card) {
 		return withAdditionalCards(newArrayList(card));
 	}
