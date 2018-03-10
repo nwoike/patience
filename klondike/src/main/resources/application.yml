@@ -6,7 +6,8 @@ spring:
         user: sa
 
 logging:
-    level.: INFO
+    level:
+      root: INFO
 
 server:
     port: ${port:8081}

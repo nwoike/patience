@@ -1,6 +1,8 @@
 package com.patience.klondike.domain.model.game.score;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public class DefaultScoringStrategy implements ScoringStrategy {
 
 	@Override

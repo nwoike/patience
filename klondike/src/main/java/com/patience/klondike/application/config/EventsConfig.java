@@ -2,14 +2,14 @@ package com.patience.klondike.application.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.patience.domain.model.event.DomainEventSerializer;
 import com.patience.domain.model.event.EventStore;
 import com.patience.domain.model.event.JdbcEventStore;
 
-@Import(MessagingConfig.class)
+@Configuration
 public class EventsConfig {
 	
 	@Autowired

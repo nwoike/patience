@@ -11,12 +11,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import com.patience.klondike.domain.model.game.GameId;
 import com.patience.klondike.domain.model.game.score.GameScore;
 import com.patience.klondike.domain.model.game.score.GameScoreRepository;
 import com.patience.klondike.infrastructure.persistence.model.game.score.GameScoreDO;
 
+@Component
 public class JdbcGameScoreRepository implements GameScoreRepository {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;

@@ -5,6 +5,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.patience.common.domain.model.card.PlayingCard;
@@ -18,6 +19,7 @@ import com.patience.klondike.domain.model.game.PassCount;
 import com.patience.klondike.domain.model.game.Settings;
 import com.patience.klondike.domain.service.game.WinChecker;
 
+@Component
 @Transactional
 public class GameApplicationService {
 
