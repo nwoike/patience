@@ -44,18 +44,18 @@ public class JdbcGameScoreRepository implements GameScoreRepository {
 	
 	@Override
 	public void save(GameScore game) {		
-		Map<String, String> parameters = buildParameterMap(game);		
+		Map<String, Object> parameters = buildParameterMap(game);		
 		int count = jdbcTemplate.queryForObject(searchSql, parameters, Integer.class);		
 		String sql = count == 0 ? insertSql	: updateSql;		
 		jdbcTemplate.update(sql, parameters);	
 	}
 
-	private Map<String, String> buildParameterMap(GameScore gameScore) {
-		Map<String, String> parameters = newHashMap();
+	private Map<String, Object> buildParameterMap(GameScore gameScore) {
+		Map<String, Object> parameters = newHashMap();
 		parameters.put("gameId", gameScore.gameId().id());		
 		parameters.put("data", convertToJson(gameScore));
-		parameters.put("existingVersion", String.valueOf(gameScore.version()));
-		parameters.put("newVersion", String.valueOf(gameScore.version() + 1));
+		parameters.put("existingVersion", gameScore.version());
+		parameters.put("newVersion", gameScore.version() + 1);
 		
 		return parameters;
 	}

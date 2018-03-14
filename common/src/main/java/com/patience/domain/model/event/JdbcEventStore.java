@@ -24,7 +24,7 @@ public class JdbcEventStore implements EventStore {
 
 	private static final String appendEventSql = "INSERT INTO Events (event_type, event_body, occurred_on) VALUES(:eventType, :eventBody, :occurredOn)";
 	
-	private static final String unprocessedEventsSql = "SELECT event_id, event_type, event_body, occurred_on FROM Events WHERE event_id > (SELECT TOP 1 latest_event_id FROM ProcessedEventTracker) ORDER BY event_id";
+	private static final String unprocessedEventsSql = "SELECT event_id, event_type, event_body, occurred_on FROM Events WHERE event_id > (SELECT latest_event_id FROM ProcessedEventTracker) ORDER BY event_id";
 	
 	private static final String allEventsSql = "SELECT event_id, event_type, event_body, occurred_on FROM Events ORDER BY event_id";
 

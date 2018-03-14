@@ -1,13 +1,17 @@
 spring:
-    application.name: klondike
+    application:
+      name: klondike
+      
     datasource:
-        driverClassName: org.hsqldb.jdbc.JDBCDriver
-        url: jdbc:hsqldb:mem:patience
-        user: sa
-
+        initialization-mode: always
+        driverClassName: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/postgres 
+        username: postgres
+        password: P0stgr3s
+        
 logging:
     level:
       root: INFO
 
 server:
-    port: ${port:8081}
+    port: 8001

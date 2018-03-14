@@ -4,7 +4,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>integration-test</artifactId>
-	<name>UI Integration Tests</name>
 
 	<parent>
 		<artifactId>patience-parent</artifactId>
@@ -48,16 +47,13 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -80,6 +76,17 @@
 						<version>2.4.13-02</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.21.0</version>
+				<configuration>
+				    <forkCount>0</forkCount>
+					<includes>
+						<include>*KlondikeSpec*</include>
+					</includes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
