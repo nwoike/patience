@@ -7,7 +7,9 @@ This codebase was written as a way to explore various Domain Driven Design conce
 I plan to continue building out the sample to include integration with a separate remote bounded context.
 
 ---
-.UI
+==== UI
+NOTE: UI/JavaScript code was written several years ago and is in need of major revamping.
+
 Included in this repository is a JavaScript/HTML5 based UI packaged into an executable JAR. Its design is not very important from a DDD perspective, it was only built in order to be able to play the game. The JSON data contracts used to communicate with the server are worth exploring from a DDD Published Language perspective. It attempts to leverage the https://www.polymer-project.org/[Polymer library], but it was my first time experimenting with it and I may have misused it a bit. As a result the UI currently *only works in Chrome*.
 
 [[screenshot]]
@@ -15,10 +17,10 @@ Included in this repository is a JavaScript/HTML5 based UI packaged into an exec
 image::http://i.imgur.com/lP3ZgoG.jpg[Game Screenshot,700]
 
 ---
-.Installation
+==== Installation
 The game leverages http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot] and provides a `docker-compose` configuration to kickstart. The game leverages PostgreSQL and RabbitMQ alongside the backend.
 
-.Maven Installation
+.Terminal
 [options="nowrap"]
 ----
 patience> mvn install
