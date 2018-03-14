@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import com.patience.klondike.domain.model.game.Game;
 import com.patience.klondike.domain.model.game.GameId;
@@ -21,6 +22,7 @@ import com.patience.klondike.infrastructure.persistence.model.game.GameDO;
 /**
  * Simple example of persisting an aggregate as a serialized graph.
  */
+@Component
 public class JdbcGameRepository implements GameRepository {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -51,18 +53,18 @@ public class JdbcGameRepository implements GameRepository {
 
 	@Override
 	public void save(Game game) {		
-		Map<String, String> parameters = buildParameterMap(game);		
+		Map<String, Object> parameters = buildParameterMap(game);		
 		int count = jdbcTemplate.queryForObject(searchSql, parameters, Integer.class);		
 		String sql = count == 0 ? insertSql	: updateSql;		
 		jdbcTemplate.update(sql, parameters);	
 	}
 
-	private Map<String, String> buildParameterMap(Game game) {
-		Map<String, String> parameters = newHashMap();
+	private Map<String, Object> buildParameterMap(Game game) {
+		Map<String, Object> parameters = newHashMap();
 		parameters.put("gameId", game.gameId().id());	
 		parameters.put("data", convertToJson(game));
-		parameters.put("existingVersion", String.valueOf(game.version()));
-		parameters.put("newVersion", String.valueOf(game.version() + 1));
+		parameters.put("existingVersion", game.version());
+		parameters.put("newVersion", game.version() + 1);
 		
 		return parameters;
 	}

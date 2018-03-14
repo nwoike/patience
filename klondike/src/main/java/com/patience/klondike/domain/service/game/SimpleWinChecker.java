@@ -1,8 +1,10 @@
 package com.patience.klondike.domain.service.game;
 
-import com.patience.klondike.domain.model.game.Game;
-import com.patience.klondike.domain.model.game.TableauPile;
+import org.springframework.stereotype.Component;
 
+import com.patience.klondike.domain.model.game.Game;
+
+@Component
 public class SimpleWinChecker implements WinChecker {
 
 	@Override
@@ -11,15 +13,7 @@ public class SimpleWinChecker implements WinChecker {
 			return false;
 		}
 		
-		boolean allTableauPileCardsFlipped = true;
-		
-		for (TableauPile tableauPile : game.tableauPiles()) {
-			if (tableauPile.unflippedCardCount() > 0) {
-				allTableauPileCardsFlipped = false;
-				break;
-			}			
-		}
-		
-		return allTableauPileCardsFlipped;
+		return game.tableauPiles().stream()
+		    .allMatch(pile -> pile.unflippedCardCount() == 0);
 	}
 }

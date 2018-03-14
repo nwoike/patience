@@ -1,14 +1,12 @@
 package com.patience.klondike
 
 import com.patience.common.domain.model.card.PlayingCard;
-import geb.Browser
-import geb.spock.GebSpec
-
-import com.patience.common.domain.model.card.PlayingCard
 import com.patience.klondike.solver.KlondikeAI;
 import com.patience.klondike.solver.Move
 import com.patience.klondike.solver.MoveHandler
 import com.patience.klondike.solver.NaiveKlondikeAI
+
+import geb.spock.GebSpec
 
 class KlondikeSpec extends GebSpec {
 	

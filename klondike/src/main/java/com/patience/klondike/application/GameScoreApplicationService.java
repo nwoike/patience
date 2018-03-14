@@ -2,6 +2,7 @@ package com.patience.klondike.application;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.patience.klondike.application.representation.PlayingCardRepresentation;
@@ -11,6 +12,7 @@ import com.patience.klondike.domain.model.game.score.GameScoreRepository;
 import com.patience.klondike.domain.model.game.score.PileType;
 import com.patience.klondike.domain.model.game.score.ScoringStrategy;
 
+@Component
 @Transactional
 public class GameScoreApplicationService {
 

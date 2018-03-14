@@ -1,67 +1,69 @@
 package com.patience.klondike.resource;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import org.junit.Before;
+import java.util.UUID;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationContextLoader;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.patience.klondike.TestConfig;
-import com.patience.klondike.application.config.Application;
-import com.patience.klondike.infrastructure.persistence.InMemoryGameRepository;
+import com.patience.klondike.application.GameApplicationService;
+import com.patience.klondike.application.GameScoreApplicationService;
+import com.patience.klondike.application.representation.GameRepresentation;
+import com.patience.klondike.domain.model.game.DrawCount;
+import com.patience.klondike.domain.model.game.Game;
+import com.patience.klondike.domain.model.game.GameId;
+import com.patience.klondike.domain.model.game.PassCount;
+import com.patience.klondike.domain.model.game.Settings;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = {Application.class, TestConfig.class}, loader = SpringApplicationContextLoader.class)
+@RunWith(SpringRunner.class)
+@WebMvcTest(controllers=GameResource.class, secure=false)
 public class GameResourceTest {
 
 	@Autowired
-	private WebApplicationContext wac;
-
 	private MockMvc mockMvc;
 
-	@Autowired
-	private InMemoryGameRepository gameRepository;
+	@MockBean
+	private GameApplicationService gameApplicationService;
 	
-	@Before
-	public void setup() {
-		this.mockMvc = webAppContextSetup(this.wac).build();
-		this.gameRepository.reset();
-	}
-
+	@MockBean
+	private GameScoreApplicationService gameScoreService;
+	
 	@Test
 	public void startGame() throws Exception {
-		mockMvc.perform(post("/klondike").accept("application/json"))
+        when(gameApplicationService.startGame("One", "Unlimited")).thenReturn("id");
+
+        mockMvc.perform(post("/klondike").accept("application/json"))
 	        .andExpect(status().isCreated())
-	        .andExpect(header().string("Location", containsString("/klondike/d5a6b733-5ed5-4a9e-9af3-5cd18e7ec1cb")));
+	        .andExpect(header().string("Location", containsString("/klondike/id")));
 	}
 
 	@Test
 	public void retrieveGame() throws Exception {
-		MvcResult createResult = mockMvc.perform(post("/klondike").accept("application/json"))
-	        .andExpect(status().isCreated())
-	        .andReturn();
-		
-	    String locationHeader = createResult.getResponse().getHeader("Location");
-		
-		MvcResult retrieveResult = mockMvc.perform(get(locationHeader).accept("application/json"))
+	    UUID id = UUID.randomUUID();
+	    
+        Game game = new Game(new GameId(id), new Settings(DrawCount.One, PassCount.Three));
+        GameRepresentation representation = new GameRepresentation(game, false);
+	    
+        when(gameApplicationService.loadGame(id.toString())).thenReturn(representation);
+        
+		mockMvc.perform(get("/klondike/" + id.toString()).accept("application/json"))
 	        .andExpect(status().isOk())
-	        .andReturn();
-		
-		// TODO: Replace with jsonPath assertions
-		System.out.println(retrieveResult.getResponse().getContentAsString());
+	        .andExpect(jsonPath("$.gameId", equalTo(id.toString())))
+	        .andDo(print());
+
 	}
 }
